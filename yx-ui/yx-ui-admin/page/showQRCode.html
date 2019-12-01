@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>展示二维码</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+</head>
+<body class="childrenBody">
+    <div id="qrCodeDiv" style="width: 200px; height: 200px; margin: 100px auto;"></div>
+</body>
+
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="../../js/jquery-3.0.0.min.js"></script>
+<script type="text/javascript" src="../../js/utf.js"></script>
+<script type="text/javascript" src="../../js/jquery.qrcode.js"></script>
+<script type="text/javascript">
+    layui.config({
+        base: "../../js/"
+    }).use(['base', 'form', 'layer', 'jquery', 'laydate', 'tree', 'upload', 'layedit'], function () {
+
+        qrcodeText = window.parent.qrcodeText;
+        isShowLogo = window.parent.isShowLogo;
+
+        jQuery('#qrCodeDiv').qrcode({
+            render: 'canvas',
+            text: qrcodeText,
+            width: '200',
+            height: '200',
+            src: (isShowLogo ? '../../images/logo.png' : '')
+        });
+
+    });
+
+</script>
+
+</html>

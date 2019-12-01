@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>个人资料--YX管理平台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+    <style type="text/css">
+        .layui-form-item .layui-inline {
+            width: 33.333%;
+            float: left;
+            margin-right: 0;
+        }
+
+        @media (max-width: 1240px) {
+            .layui-form-item .layui-inline {
+                width: 100%;
+                float: none;
+            }
+        }
+    </style>
+</head>
+<body class="childrenBody">
+<form class="layui-form" style="width:80%;" id="userForm">
+    <div class="layui-form-item">
+        <label class="layui-form-label">登录账号</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input account" name="account" readonly>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block ">
+                <input type="radio" class="sex" name="sex" value="1" title="男" checked>
+                <input type="radio" class="sex" name="sex" value="2" title="女">
+                <input type="radio" class="sex" name="sex" value="0" title="保密">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">出生日期</label>
+            <div class="layui-input-inline">
+                <input type="text" name="birthDay" id="date" lay-verify="date" placeholder="yyyy-MM-dd"
+                       autocomplete="off"
+                       class="layui-input birthDay">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">部门</label>
+            <div class="layui-input-block">
+                <input type="text" id="deptName" name="deptName" class="layui-input deptName" readonly>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">真实姓名</label>
+            <div class="layui-input-inline">
+                <input type="hidden" id="id" name="id" class="id">
+                <input type="text" class="layui-input userName" name="userName" lay-verify="required" placeholder="请输入真实姓名">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">电话</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input phone" name="phone" lay-verify="phone" placeholder="请输入电话">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">电子邮箱</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input email" name="email" lay-verify="email" placeholder="请输入电子邮箱">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">身份证</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input idCard" name="idCard" lay-verify="identity" placeholder="请输入身份证">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">微信</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input weiXin" name="weiXin" lay-verify="" placeholder="请输入微信">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">微博</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input weiBo" name="weiBo" lay-verify="" placeholder="请输入微博">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">QQ</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input qq" name="qq" lay-verify="" placeholder="请输入QQ">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">职位</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input position" name="position" lay-verify="" placeholder="请输入职位">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="addUser">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="myself.js"></script>
+</body>
+</html>

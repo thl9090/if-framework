@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>还款中标的信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_495397_jzxo653foj6skyb9.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+</head>
+<body class="childrenBody">
+<blockquote class="layui-elem-quote news_search">
+    <form class="layui-form"  id="dataForm">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">标题</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="title" value="" placeholder="借款标题" class="layui-input search_input title">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">借款人手机</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="borrowUserPhone" value="" placeholder="借款人手机" class="layui-input search_input borrowUserPhone">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">借款人姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="borrowUserName" value="" placeholder="借款人姓名" class="layui-input search_input borrowUserName">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">创建时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="createTime" name="" placeholder="请输入" autocomplete="off" class="layui-input createTime">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">借款类型</label>
+                <div class="layui-input-inline" >
+                    <select name="assetType"  class="assetType">
+                        <option value="">请选择</option>
+                        <option value="3">安享系列</option>
+                        <option value="4">私享系列</option>
+                        <option value="5">尊享系列</option>
+                        <option value="6">福享系列</option>
+                        <option value="8">新手福利</option>
+                        <!--<option value="6">净值标</option>-->
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">还款方式</label>
+                <div class="layui-input-inline" >
+                    <select name="repurchaseMode"  class="repurchaseMode">
+                        <option value="">请选择</option>
+                        <option value="1">按月等额本息</option>
+                        <option value="2">按月先息后本</option>
+                        <option value="3">按日计息，到期还本息</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <a class="layui-btn search_btn">查询</a>
+        </div>
+       <!-- <div class="layui-inline">
+            <a class="layui-btn layui-btn-normal ProductAdd_btn">发布借款标</a>
+        </div>-->
+       <!-- <div class="layui-inline">
+            <a class="layui-btn layui-btn-danger batchDel">批量删除</a>
+        </div>-->
+        <permission value="sys:product:export">
+            <div class="layui-inline">
+                <a class="layui-btn exportBtn">数据导出</a>
+            </div>
+            <div class="layui-inline">
+                <a class="layui-btn exportLogBtn">导出结果</a>
+            </div>
+        </permission>
+    </form>
+</blockquote>
+
+<table class="layui-table" id="ProductTable" lay-filter="tableFilter"></table>
+
+<!-- 分页控件div -->
+<div id="pageDiv"></div>
+<!-- 工具栏模板 -->
+<div style="display: none;" id="toolBar">
+    <permission value="sys:product:read">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    </permission>
+        <!--<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+</div>
+<script type="text/javascript" src="../../js/application.js"></script>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="productRepaymentingList.js"></script>
+<script type="text/html" id="repurchaseModeTpl">
+    {{#  if(d.repurchaseMode === 1){ }}
+    <div>{{"等额本息"}}</div>
+    {{#  } }}
+    {{#  if(d.repurchaseMode === 2){ }}
+    <div>{{"先息后本"}}</div>
+    {{#  } }}
+    {{#  if(d.repurchaseMode === 3){ }}
+    <div>{{"到期还本息"}}</div>
+    {{#  } }}
+</script>
+<script type="text/html" id="assetTypeTpl">
+    {{#  if(d.assetType === 3){ }}
+    <div>{{"安享系列"}}</div>
+    {{#  } }}
+    {{#  if(d.assetType === 4){ }}
+    <div>{{"私享系列"}}</div>
+    {{#  } }}
+    {{#  if(d.assetType === 5){ }}
+    <div>{{"尊享系列"}}</div>
+    {{#  } }}
+    {{#  if(d.assetType === 6){ }}
+    <div>{{"福享系列"}}</div>
+    {{#  } }}
+    {{#  if(d.assetType === 8){ }}
+    <div>{{"新手福利"}}</div>
+    {{#  } }}
+    {{#  if(d.assetType === 10){ }}
+    <div>{{"净值标"}}</div>
+    {{#  } }}
+</script>
+<script type="text/html" id="useTypeTpl">
+    {{#  if(d.useType === 1){ }}
+    <div>{{"个人消费"}}</div>
+    {{#  } }}
+    {{#  if(d.useType === 2){ }}
+    <div>{{"短期周转"}}</div>
+    {{#  } }}
+    {{#  if(d.useType === 4){ }}
+    <div>{{d.useTypeRemark}}</div>
+    {{#  } }}
+    {{#  if(d.useType === 3){ }}
+    <div>{{"企业资金周转"}}</div>
+    {{#  } }}
+    {{#  if(d.useType === 5){ }}
+    <div>{{"赎楼"}}</div>
+    {{#  } }}
+    {{#  if(d.useType === 6){ }}
+    <div>{{"企业过桥"}}</div>
+    {{#  } }}
+    {{#  if(d.useType === 7){ }}
+    <div>{{"购车"}}</div>
+    {{#  } }}
+    {{#  if(d.useType === 8){ }}
+    <div>{{"装修"}}</div>
+    {{#  } }}
+    {{#  if(d.useType === 9){ }}
+    <div>{{"教育培训"}}</div>
+    {{#  } }}
+    {{#  if(d.useType === 10){ }}
+    <div>{{"个人旅游"}}</div>
+    {{#  } }}
+    {{#  if(d.useType === 11){ }}
+    <div>{{"企业经营"}}</div>
+    {{#  } }}
+    {{#  if(d.useType === 12){ }}
+    <div>{{"日常消费"}}</div>
+    {{#  } }}
+</script>
+<script type="text/html" id="productStatusTpl">
+    {{#  if(d.productStatus === 2){ }}
+    <div>{{"初审"}}</div>
+    {{#  } }}
+    {{#  if(d.productStatus === 3){ }}
+    <div>{{"终审"}}</div>
+    {{#  } }}
+    {{#  if(d.productStatus === 4){ }}
+    <div>{{"初审拒绝"}}</div>
+    {{#  } }}
+    {{#  if(d.productStatus === 5){ }}
+    <div>{{"终审拒绝"}}</div>
+    {{#  } }}
+    {{#  if(d.productStatus === 6){ }}
+    <div>{{"招标失败"}}</div>
+    {{#  } }}
+    {{#  if(d.productStatus === 7){ }}
+    <div>{{"招标中"}}</div>
+    {{#  } }}
+    {{#  if(d.productStatus === 8){ }}
+    <div>{{"已撤销"}}</div>
+    {{#  } }}
+    {{#  if(d.productStatus === 9){ }}
+    <div>{{"流标"}}</div>
+    {{#  } }}
+    {{#  if(d.productStatus === 10){ }}
+    <div>{{"还款中"}}</div>
+    {{#  } }}
+    {{#  if(d.productStatus === 11){ }}
+    <div>{{"已还清"}}</div>
+    {{#  } }}
+    {{#  if(d.productStatus === 12){ }}
+    <div>{{"逾期"}}</div>
+    {{#  } }}
+    {{#  if(d.productStatus === 14){ }}
+    <div>{{"满标"}}</div>
+    {{#  } }}
+    {{#  if(d.productStatus === 20){ }}
+    <div>{{"放款中"}}</div>
+    {{#  } }}
+    {{#  if(d.productStatus === 21){ }}
+    <div>{{"放款失败"}}</div>
+    {{#  } }}
+    {{#  if(d.productStatus === 22){ }}
+    <div>{{"流标处理中"}}</div>
+    {{#  } }}
+</script>
+<script type="text/html" id="productRatingTpl">
+    {{#  if(d.productRating === 1){ }}
+    <div>{{"A"}}</div>
+    {{#  } }}
+    {{#  if(d.productRating === 2){ }}
+    <div>{{"B"}}</div>
+    {{#  } }}
+    {{#  if(d.productRating === 3){ }}
+    <div>{{"C"}}</div>
+    {{#  } }}
+    {{#  if(d.productRating === 4){ }}
+    <div>{{"D"}}</div>
+    {{#  } }}
+    {{#  if(d.productRating === 5){ }}
+    <div>{{"E"}}</div>
+    {{#  } }}
+</script>
+</body>
+</html>

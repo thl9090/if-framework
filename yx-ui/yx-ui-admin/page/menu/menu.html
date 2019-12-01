@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>菜单添加</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="../../font/iconfont.css">
+    <style type="text/css">
+        .layui-form-item .layui-inline {
+            width: 33.333%;
+            float: left;
+            margin-right: 0;
+        }
+
+        @media (max-width: 1240px) {
+            .layui-form-item .layui-inline {
+                width: 100%;
+                float: none;
+            }
+        }
+        .mask{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    display: none;
+    overflow-y: scroll;
+}
+
+.maskbox{
+    padding:20px 20px;
+    /*width: 800px;*/
+    background: #fff;
+    color: #000;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 5px;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    display: none;
+    z-index: 9999;
+    margin-top: 100px;
+    margin-bottom: 60px;
+}
+
+.maskbox ul li{
+    width: 40px;
+    height: 40px;
+    float: left;
+    line-height: 40px;
+    border: 1px #ccc solid;
+    text-align: center;
+
+}
+.maskbox li i{
+    font-size: 34px;
+    color: #333;
+}
+.maskbox div{
+    display: none;
+}
+#maskclose{
+    display: block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    background: #fff;
+    float: right;
+    border-radius: 50%;
+    text-align: center;
+    margin-right:10%;
+    margin-top: 15px;
+    cursor: pointer;
+}
+    </style>
+</head>
+<body class="childrenBody">
+<form class="layui-form" style="width: 80%;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block">
+            <input type="radio" name="menuType" lay-filter="menuType" value="0" title="目录">
+            <input type="radio" name="menuType" lay-filter="menuType" value="1" checked title="菜单">
+            <input type="radio" name="menuType" lay-filter="menuType" value="2" title="按钮">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="menuName" class="layui-input menuName" lay-verify="required" placeholder="请输入菜单名称">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">上级菜单</label>
+            <div class="layui-input-block">
+                <input type="hidden" id="parentId" name="parentId" class="layui-input parentId" value="0">
+                <input type="text" id="parentName" name="parentName" class="layui-input parentName" placeholder="一级菜单"
+                       readonly>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item request">
+        <label class="layui-form-label">请求地址</label>
+        <div class="layui-input-block">
+            <input type="text" name="request" class="layui-input request" placeholder="请输入请求地址">
+        </div>
+    </div>
+    <div class="layui-form-item permission">
+        <label class="layui-form-label">权限标识</label>
+        <div class="layui-input-block">
+            <input type="text" name="permission" class="layui-input permission"
+                   placeholder="多个用逗号分隔，如：user:list,user:create">
+        </div>
+    </div>
+    <div class="layui-form-item sortNo">
+        <div class="layui-inline">
+            <label class="layui-form-label">排序号</label>
+            <div class="layui-input-block">
+                <input type="text" name="sortNo" class="layui-input sortNo" lay-verify="not_required_number"
+                       placeholder="请输入排序号">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item iconcls">
+        <label class="layui-form-label">图标样式</label>
+        <div class="layui-input-block">
+            <input type="text" name="iconcls" class="layui-input iconcls" placeholder="请输入菜单图标样式" id='blockicon'>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="hidden" id="id" name="id" class="id">
+            <button class="layui-btn" lay-submit="" lay-filter="btn_submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<div class="mask">
+    <i class='icon iconfont icon-close' id='maskclose'></i>
+    <div class='maskbox'>
+        
+       <ul class="icon_lists clear">
+            
+                <li>
+                <i class="icon iconfont icon-accessory"></i>
+                    <div class="name">accessory</div>
+                    <div class="fontclass">.icon-accessory</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-activity"></i>
+                    <div class="name">activity</div>
+                    <div class="fontclass">.icon-activity</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-activity_fill"></i>
+                    <div class="name">activity_fill</div>
+                    <div class="fontclass">.icon-activity_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-add"></i>
+                    <div class="name">add</div>
+                    <div class="fontclass">.icon-add</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-addition_fill"></i>
+                    <div class="name">addition_fill</div>
+                    <div class="fontclass">.icon-addition_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-addition"></i>
+                    <div class="name">addition</div>
+                    <div class="fontclass">.icon-addition</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-addpeople_fill"></i>
+                    <div class="name">addpeople_fill</div>
+                    <div class="fontclass">.icon-addpeople_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-addpeople"></i>
+                    <div class="name">addpeople</div>
+                    <div class="fontclass">.icon-addpeople</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-addressbook_fill"></i>
+                    <div class="name">addressbook_fill</div>
+                    <div class="fontclass">.icon-addressbook_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-addressbook"></i>
+                    <div class="name">addressbook</div>
+                    <div class="fontclass">.icon-addressbook</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-barrage_fill"></i>
+                    <div class="name">barrage_fill</div>
+                    <div class="fontclass">.icon-barrage_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-barrage"></i>
+                    <div class="name">barrage</div>
+                    <div class="fontclass">.icon-barrage</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-browse_fill"></i>
+                    <div class="name">browse_fill</div>
+                    <div class="fontclass">.icon-browse_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-browse"></i>
+                    <div class="name">browse</div>
+                    <div class="fontclass">.icon-browse</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-brush"></i>
+                    <div class="name">brush</div>
+                    <div class="fontclass">.icon-brush</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-brush_fill"></i>
+                    <div class="name">brush_fill</div>
+                    <div class="fontclass">.icon-brush_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-businesscard_fill"></i>
+                    <div class="name">businesscard_fill</div>
+                    <div class="fontclass">.icon-businesscard_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-businesscard"></i>
+                    <div class="name">businesscard</div>
+                    <div class="fontclass">.icon-businesscard</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-camera_fill"></i>
+                    <div class="name">camera_fill</div>
+                    <div class="fontclass">.icon-camera_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-camera"></i>
+                    <div class="name">camera</div>
+                    <div class="fontclass">.icon-camera</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-clock_fill"></i>
+                    <div class="name">clock_fill</div>
+                    <div class="fontclass">.icon-clock_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-clock"></i>
+                    <div class="name">clock</div>
+                    <div class="fontclass">.icon-clock</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-close"></i>
+                    <div class="name">close</div>
+                    <div class="fontclass">.icon-close</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-collection_fill"></i>
+                    <div class="name">collection_fill</div>
+                    <div class="fontclass">.icon-collection_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-collection"></i>
+                    <div class="name">collection</div>
+                    <div class="fontclass">.icon-collection</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-computer_fill"></i>
+                    <div class="name">computer_fill</div>
+                    <div class="fontclass">.icon-computer_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-computer"></i>
+                    <div class="name">computer</div>
+                    <div class="fontclass">.icon-computer</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-coordinates_fill"></i>
+                    <div class="name">coordinates_fill</div>
+                    <div class="fontclass">.icon-coordinates_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-coordinates"></i>
+                    <div class="name">coordinates</div>
+                    <div class="fontclass">.icon-coordinates</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-coupons_fill"></i>
+                    <div class="name">coupons_fill</div>
+                    <div class="fontclass">.icon-coupons_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-coupons"></i>
+                    <div class="name">coupons</div>
+                    <div class="fontclass">.icon-coupons</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-createtask_fill"></i>
+                    <div class="name">createtask_fill</div>
+                    <div class="fontclass">.icon-createtask_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-createtask"></i>
+                    <div class="name">createtask</div>
+                    <div class="fontclass">.icon-createtask</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-customerservice_fill"></i>
+                    <div class="name">customerservice_fill</div>
+                    <div class="fontclass">.icon-customerservice_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-customerservice"></i>
+                    <div class="name">customerservice</div>
+                    <div class="fontclass">.icon-customerservice</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-delete_fill"></i>
+                    <div class="name">delete_fill</div>
+                    <div class="fontclass">.icon-delete_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-delete"></i>
+                    <div class="name">delete</div>
+                    <div class="fontclass">.icon-delete</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-document_fill"></i>
+                    <div class="name">document_fill</div>
+                    <div class="fontclass">.icon-document_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-dynamic"></i>
+                    <div class="name">dynamic</div>
+                    <div class="fontclass">.icon-dynamic</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-editor"></i>
+                    <div class="name">editor</div>
+                    <div class="fontclass">.icon-editor</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-eit"></i>
+                    <div class="name">eit</div>
+                    <div class="fontclass">.icon-eit</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-emoji_fill"></i>
+                    <div class="name">emoji_fill</div>
+                    <div class="fontclass">.icon-emoji_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-emoji"></i>
+                    <div class="name">emoji</div>
+                    <div class="fontclass">.icon-emoji</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-empty"></i>
+                    <div class="name">empty</div>
+                    <div class="fontclass">.icon-empty</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-enterinto_fill"></i>
+                    <div class="name">enterinto_fill</div>
+                    <div class="fontclass">.icon-enterinto_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-flashlight"></i>
+                    <div class="name">flashlight</div>
+                    <div class="fontclass">.icon-flashlight</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-flip"></i>
+                    <div class="name">flip</div>
+                    <div class="fontclass">.icon-flip</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-flip_fill"></i>
+                    <div class="name">flip_fill</div>
+                    <div class="fontclass">.icon-flip_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-group"></i>
+                    <div class="name">group</div>
+                    <div class="fontclass">.icon-group</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-group_fill"></i>
+                    <div class="name">group_fill</div>
+                    <div class="fontclass">.icon-group_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-headlines_fill"></i>
+                    <div class="name">headlines_fill</div>
+                    <div class="fontclass">.icon-headlines_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-headlines"></i>
+                    <div class="name">headlines</div>
+                    <div class="fontclass">.icon-headlines</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-homepage_fill"></i>
+                    <div class="name">homepage_fill</div>
+                    <div class="fontclass">.icon-homepage_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-homepage"></i>
+                    <div class="name">homepage</div>
+                    <div class="fontclass">.icon-homepage</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-integral_fill"></i>
+                    <div class="name">integral_fill</div>
+                    <div class="fontclass">.icon-integral_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-integral"></i>
+                    <div class="name">integral</div>
+                    <div class="fontclass">.icon-integral</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-interactive_fill"></i>
+                    <div class="name">interactive_fill</div>
+                    <div class="fontclass">.icon-interactive_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-interactive"></i>
+                    <div class="name">interactive</div>
+                    <div class="fontclass">.icon-interactive</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-keyboard"></i>
+                    <div class="name">keyboard</div>
+                    <div class="fontclass">.icon-keyboard</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-label"></i>
+                    <div class="name">label</div>
+                    <div class="fontclass">.icon-label</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-label_fill"></i>
+                    <div class="name">label_fill</div>
+                    <div class="fontclass">.icon-label_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-like_fill"></i>
+                    <div class="name">like_fill</div>
+                    <div class="fontclass">.icon-like_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-like"></i>
+                    <div class="name">like</div>
+                    <div class="fontclass">.icon-like</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-live"></i>
+                    <div class="name">live</div>
+                    <div class="fontclass">.icon-live</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-lock_fill"></i>
+                    <div class="name">lock_fill</div>
+                    <div class="fontclass">.icon-lock_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-mail"></i>
+                    <div class="name">mail</div>
+                    <div class="fontclass">.icon-mail</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-manage"></i>
+                    <div class="name">manage</div>
+                    <div class="fontclass">.icon-manage</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-message"></i>
+                    <div class="name">message</div>
+                    <div class="fontclass">.icon-message</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-message_fill"></i>
+                    <div class="name">message_fill</div>
+                    <div class="fontclass">.icon-message_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-mine_fill"></i>
+                    <div class="name">mine_fill</div>
+                    <div class="fontclass">.icon-mine_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-mobilephone_fill"></i>
+                    <div class="name">mobilephone_fill</div>
+                    <div class="fontclass">.icon-mobilephone_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-offline"></i>
+                    <div class="name">offline</div>
+                    <div class="fontclass">.icon-offline</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-order_fill"></i>
+                    <div class="name">order_fill</div>
+                    <div class="fontclass">.icon-order_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-order"></i>
+                    <div class="name">order</div>
+                    <div class="fontclass">.icon-order</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-people_fill"></i>
+                    <div class="name">people_fill</div>
+                    <div class="fontclass">.icon-people_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-people"></i>
+                    <div class="name">people</div>
+                    <div class="fontclass">.icon-people</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-playon_fill"></i>
+                    <div class="name">playon_fill</div>
+                    <div class="fontclass">.icon-playon_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-praise_fill"></i>
+                    <div class="name">praise_fill</div>
+                    <div class="fontclass">.icon-praise_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-praise"></i>
+                    <div class="name">praise</div>
+                    <div class="fontclass">.icon-praise</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-qrcode"></i>
+                    <div class="name">qrcode</div>
+                    <div class="fontclass">.icon-qrcode</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-redpacket_fill"></i>
+                    <div class="name">redpacket_fill</div>
+                    <div class="fontclass">.icon-redpacket_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-redpacket"></i>
+                    <div class="name">redpacket</div>
+                    <div class="fontclass">.icon-redpacket</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-remind"></i>
+                    <div class="name">remind</div>
+                    <div class="fontclass">.icon-remind</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-scan"></i>
+                    <div class="name">scan</div>
+                    <div class="fontclass">.icon-scan</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-select"></i>
+                    <div class="name">select</div>
+                    <div class="fontclass">.icon-select</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-service_fill"></i>
+                    <div class="name">service_fill</div>
+                    <div class="fontclass">.icon-service_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-service"></i>
+                    <div class="name">service</div>
+                    <div class="fontclass">.icon-service</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-setup"></i>
+                    <div class="name">setup</div>
+                    <div class="fontclass">.icon-setup</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-share_fill"></i>
+                    <div class="name">share_fill</div>
+                    <div class="fontclass">.icon-share_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-shielding_fill"></i>
+                    <div class="name">shielding_fill</div>
+                    <div class="fontclass">.icon-shielding_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-shielding"></i>
+                    <div class="name">shielding</div>
+                    <div class="fontclass">.icon-shielding</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-smallscreen_fill"></i>
+                    <div class="name">smallscreen_fill</div>
+                    <div class="fontclass">.icon-smallscreen_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-smallscreen"></i>
+                    <div class="name">smallscreen</div>
+                    <div class="fontclass">.icon-smallscreen</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-success_fill"></i>
+                    <div class="name">success_fill</div>
+                    <div class="fontclass">.icon-success_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-suspend"></i>
+                    <div class="name">suspend</div>
+                    <div class="fontclass">.icon-suspend</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-switch"></i>
+                    <div class="name">switch</div>
+                    <div class="fontclass">.icon-switch</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-systemprompt_fill"></i>
+                    <div class="name">systemprompt_fill</div>
+                    <div class="fontclass">.icon-systemprompt_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-tailor"></i>
+                    <div class="name">tailor</div>
+                    <div class="fontclass">.icon-tailor</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-task"></i>
+                    <div class="name">task</div>
+                    <div class="fontclass">.icon-task</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-task_fill"></i>
+                    <div class="name">task_fill</div>
+                    <div class="fontclass">.icon-task_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-tasklist_fill"></i>
+                    <div class="name">tasklist_fill</div>
+                    <div class="fontclass">.icon-tasklist_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-tasklist"></i>
+                    <div class="name">tasklist</div>
+                    <div class="fontclass">.icon-tasklist</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-time"></i>
+                    <div class="name">time</div>
+                    <div class="fontclass">.icon-time</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-translation_fill"></i>
+                    <div class="name">translation_fill</div>
+                    <div class="fontclass">.icon-translation_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-trash"></i>
+                    <div class="name">trash</div>
+                    <div class="fontclass">.icon-trash</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-unlock_fill"></i>
+                    <div class="name">unlock_fill</div>
+                    <div class="fontclass">.icon-unlock_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-unlock"></i>
+                    <div class="name">unlock</div>
+                    <div class="fontclass">.icon-unlock</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-video"></i>
+                    <div class="name">video</div>
+                    <div class="fontclass">.icon-video</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-video_fill"></i>
+                    <div class="name">video_fill</div>
+                    <div class="fontclass">.icon-video_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-warning"></i>
+                    <div class="name">warning</div>
+                    <div class="fontclass">.icon-warning</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-workbench"></i>
+                    <div class="name">workbench</div>
+                    <div class="fontclass">.icon-workbench</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-search"></i>
+                    <div class="name">search</div>
+                    <div class="fontclass">.icon-search</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-qianniu"></i>
+                    <div class="name">qianriu_fill</div>
+                    <div class="fontclass">.icon-qianniu</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-publishgoods_fill"></i>
+                    <div class="name">publish goods_fill</div>
+                    <div class="fontclass">.icon-publishgoods_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-shop_fill"></i>
+                    <div class="name">shop_fill</div>
+                    <div class="fontclass">.icon-shop_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-transaction_fill"></i>
+                    <div class="name">transaction_fill</div>
+                    <div class="fontclass">.icon-transaction_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-wangwang"></i>
+                    <div class="name">wangwang_fill</div>
+                    <div class="fontclass">.icon-wangwang</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-financial_fill"></i>
+                    <div class="name">financial_fill</div>
+                    <div class="fontclass">.icon-financial_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-marketing_fill"></i>
+                    <div class="name">marketing_fill</div>
+                    <div class="fontclass">.icon-marketing_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-shake"></i>
+                    <div class="name">shake</div>
+                    <div class="fontclass">.icon-shake</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-decoration_fill"></i>
+                    <div class="name">decoration_fill</div>
+                    <div class="fontclass">.icon-decoration_fill</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-budaidise"></i>
+                    <div class="name">logo</div>
+                    <div class="fontclass">.icon-budaidise</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-qianniudaidise"></i>
+                    <div class="name">logo_fill</div>
+                    <div class="fontclass">.icon-qianniudaidise</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-questions"></i>
+                    <div class="name">questions</div>
+                    <div class="fontclass">.icon-questions</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-supply"></i>
+                    <div class="name">supply</div>
+                    <div class="fontclass">.icon-supply</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-tools"></i>
+                    <div class="name">tools</div>
+                    <div class="fontclass">.icon-tools</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-int"></i>
+                    <div class="name">int_fill</div>
+                    <div class="fontclass">.icon-int</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-commodity"></i>
+                    <div class="name">commodity</div>
+                    <div class="fontclass">.icon-commodity</div>
+                </li>
+            
+                <li>
+                <i class="icon iconfont icon-zhtn"></i>
+                    <div class="name">energy</div>
+                    <div class="fontclass">.icon-zhtn</div>
+                </li>
+            
+        </ul>
+
+    </div>
+    </div>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+</body>
+</html>

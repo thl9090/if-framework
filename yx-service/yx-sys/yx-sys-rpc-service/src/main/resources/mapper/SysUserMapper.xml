@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.dao.mapper.SysUserMapper">
+    <!-- 基础查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.sys.model.SysUser">
+        <result column="id" property="id" />
+        <result column="is_del" property="isDel" />
+        <result column="enable_" property="enable" />
+        <result column="remark_" property="remark" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="account_" property="account" />
+        <result column="password_" property="password" />
+        <result column="user_type" property="userType" />
+        <result column="user_name" property="userName" />
+        <result column="name_pinyin" property="namePinyin" />
+        <result column="sex_" property="sex" />
+        <result column="avatar_" property="avatar" />
+        <result column="phone_" property="phone" />
+        <result column="email_" property="email" />
+        <result column="id_card" property="idCard" />
+        <result column="wei_xin" property="weiXin" />
+        <result column="wei_bo" property="weiBo" />
+        <result column="qq_" property="qq" />
+        <result column="birth_day" property="birthDay" />
+        <result column="dept_id" property="deptId" />
+        <result column="position_" property="position" />
+        <result column="address_" property="address" />
+        <result column="staff_no" property="staffNo" />
+    </resultMap>
+    
+    <!-- 扩展查询映射结果 -->
+    <resultMap id="VOResultMap" extends="BaseResultMap" type="com.yx.sys.model.vo.SysUserVO" >
+    	<result column="deptName" property="deptName"/>
+        <result column="roleNames" property="roleNames"/>
+    
+    </resultMap>
+    
+    
+    <!-- <select id="selectPage"  resultMap="BaseResultMap">
+        SELECT u.*,d.dept_name as deptName
+        FROM sys_user u left join sys_dept d on u.dept_id = d.id
+        where  u.is_del=0
+        <if test="searchKey != null and searchKey!='' ">
+            AND (u.user_name like "%"#{searchKey}"%" OR phone_ like "%"#{searchKey}"%" OR account_ like "%"#{searchKey}"%" )
+        </if>
+    </select> -->
+    
+    <select id="selectPage"  resultMap="BaseResultMap">
+        SELECT
+          u.*
+        FROM sys_user u
+        where
+            u.is_del=0
+            <if test="sysUser.account!=null and sysUser.account!='' ">
+                AND  u.account_ =#{sysUser.account}
+            </if>
+            <if test="sysUser.userName!=null and sysUser.userName!='' ">
+                AND  u.user_name =#{sysUser.userName}
+            </if>
+            <if test="sysUser.phone!=null and sysUser.phone!='' ">
+                AND  u.phone_ =#{sysUser.phone}
+            </if>
+
+    </select>
+    
+    <select id="selectVOPage"  resultMap="VOResultMap">
+        SELECT 
+        	u.*,
+        	d.dept_name as deptName,
+            group_concat(sr.role_name) as roleNames
+        FROM sys_user u 
+        left join sys_dept d on u.dept_id = d.id
+        left join sys_user_role sur on sur.user_id=u.id AND  sur.is_del=0
+        left join sys_role sr on sr.id=sur.role_id AND  sr.is_del=0
+        where  
+        	u.is_del=0
+            <if test="sysUserVO.account!=null and sysUserVO.account!='' ">
+                AND  u.account_ =#{sysUserVO.account}
+            </if>
+            <if test="sysUserVO.userName!=null and sysUserVO.userName!='' ">
+                AND  u.user_name =#{sysUserVO.userName}
+            </if>
+            <if test="sysUserVO.phone!=null and sysUserVO.phone!='' ">
+                AND  u.phone_ =#{sysUserVO.phone}
+            </if>
+            <if test="sysUserVO.userIdList!=null and sysUserVO.userIdList.size()>0 ">
+                AND  u.id in
+                <foreach collection="sysUserVO.userIdList" open="(" separator="," close=")" item="item">
+                    #{item}
+                </foreach>
+            </if>
+
+        GROUP BY u.id
+        ORDER BY u.id DESC
+    </select>
+    
+    <select id="selectById" resultMap="BaseResultMap">
+    	SELECT u.*,
+    	d.dept_name as deptName
+        FROM sys_user u left join sys_dept d on u.dept_id = d.id
+        where  u.is_del=0
+            AND u.id = #{id}
+    
+    </select>
+    
+    <select id="selectVOById"  resultMap="VOResultMap">
+        SELECT 
+        	u.*,
+        	d.dept_name as deptName
+        FROM sys_user u 
+        left join sys_dept d on u.dept_id = d.id
+        where  
+        	u.is_del=0
+            AND u.id = #{id}
+    </select>
+</mapper>

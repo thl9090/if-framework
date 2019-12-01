@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.dao.mapper.ExportLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.sys.model.ExportLog">
+        <result column="id" property="id" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="type" property="type" />
+        <result column="status" property="status" />
+        <result column="file_url" property="fileUrl" />
+        <result column="times" property="times" />
+    </resultMap>
+
+
+    <select id="selectPage" resultMap="BaseResultMap">
+          SELECT
+              el.*
+          FROM
+              export_log el
+          WHERE 1=1
+              AND  el.create_by=#{exportLog.createBy}
+              AND  el.type=#{exportLog.type}
+
+          ORDER BY  el.id DESC
+
+    </select>
+
+    <select id="selectLateByUserIdAndType" resultMap="BaseResultMap">
+        SELECT
+              el.*
+          FROM
+              export_log el
+          WHERE 1=1
+              AND  el.create_by=#{userId}
+              AND  el.type=#{type}
+
+          ORDER BY  el.id DESC
+          limit 1
+    </select>
+
+
+</mapper>

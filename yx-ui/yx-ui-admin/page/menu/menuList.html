@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>菜单管理--YX管理平台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_495397_jzxo653foj6skyb9.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="../../font/iconfont.css">
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+    <style>
+    .icon{
+        margin-left: 50px;
+        font-size: 22px;
+    }
+    </style>
+</head>
+<body class="childrenBody">
+<blockquote class="layui-elem-quote news_search">
+    <form class="layui-form"  id="dataForm">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">菜单名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="" name="menuName" placeholder="菜单名称" class="layui-input menuName">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">菜单类型</label>
+                <div class="layui-input-inline" >
+                    <select name="menuType"  class="menuType">
+                        <option value="">请选择</option>
+                        <option value="0">目录</option>
+                        <option value="1">菜单</option>
+                        <option value="2">按钮</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">上级菜单</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="" name="parentName" placeholder="上级菜单名称" class="layui-input parentName">
+                </div>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <a class="layui-btn search_btn">查询</a>
+        </div>
+        <permission value="sys:menu:add">
+            <div class="layui-inline">
+                <a class="layui-btn layui-btn-normal menuAdd_btn">添加菜单</a>
+            </div>
+        </permission>
+        <permission value="sys:menu:delete">
+            <div class="layui-inline">
+                <a class="layui-btn layui-btn-danger batchDel">批量删除</a>
+            </div>
+        </permission>
+    </form>
+</blockquote>
+<table class="layui-table" id="menuTable" lay-filter="menuTable"></table>
+
+<!-- 分页控件div -->
+<div id="pageDiv"></div>
+<!-- 工具栏模板 -->
+<div style="display: none;" id="toolBar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <permission value="sys:menu:update">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    </permission>
+    <permission value="sys:menu:delete">
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </permission>
+</div>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="menuList.js?v=11"></script>
+</body>
+</html>

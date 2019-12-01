@@ -1,0 +1,21 @@
+form input.layui-input[disabled]{ background:#f2f2f2; color:#595963!important; }
+.dept_left{ width:45%; float: left; margin:20px 0 0 5%; }
+.dept_right{ width:25%; float: left; margin:20px 0 0 5%; text-align: center; }
+.dept_right p{ margin:10px 0 25px; font-size: 12px; text-align: center; color: #FF5722;}
+.dept_right img#deptFace{ width:200px; height:200px; }
+.layui-table,.layui-table th{ text-align:center; }
+.deptAddress.layui-form-item .layui-input-inline{ width:23%; }
+.deptAddress.layui-form-item .layui-input-inline:last-child{ margin-right:0; }
+/*部门列表*/
+#page{ text-align:right; }
+
+
+/*适配*/
+@media screen and (max-width:1050px){
+	/*部门信息*/
+	.dept_left,.dept_right,.changePwd{ width:100%; float:none; margin-left: 0; }
+	.dept_right{ margin-bottom: 20px; }
+}
+@media screen and (max-width:450px){
+	.deptAddress.layui-form-item .layui-input-inline{ width:auto; }
+}

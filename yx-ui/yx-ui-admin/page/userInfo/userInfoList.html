@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>客户列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_495397_jzxo653foj6skyb9.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+</head>
+<body class="childrenBody">
+<blockquote class="layui-elem-quote news_search">
+    <form class="layui-form" id="dataForm">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">手机号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="phone" value="" placeholder="手机号" class="layui-input search_input phone">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="realName" value="" placeholder="姓名"
+                           class="layui-input search_input realName">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="userName" value="" placeholder="用户名"
+                           class="layui-input search_input userName">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">注册时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="createTime" name="" placeholder="请输入" autocomplete="off"
+                           class="layui-input createTime">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">注册来源</label>
+                <div class="layui-input-inline">
+                    <select name="source" class="source">
+                        <option value="">请选择</option>
+                        <option value="1">PC</option>
+                        <option value="3">WX</option>
+                        <option value="4">安卓</option>
+                        <option value="5">IOS</option>
+                        <option value="6">ADMIN</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">客户类型</label>
+                <div class="layui-input-inline">
+                    <select name="custType" class="custType">
+                        <option value="">请选择</option>
+                        <option value="1">个人出借用户</option>
+                        <option value="2">个人融资用户</option>
+                        <option value="3">企业融资用户</option>
+                        <option value="4">企业担保用户</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">账户状态</label>
+                <div class="layui-input-inline">
+                    <select name="accountStatus" class="accountStatus">
+                        <option value="">请选择</option>
+                        <option value="0">未开通</option>
+                        <option value="1">已开通</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="email" value="" placeholder="邮箱" class="layui-input search_input email">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">推荐人手机号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="refPhone" value="" placeholder="推荐人手机号"
+                           class="layui-input search_input refPhone" maxlength="11">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">用户类型</label>
+                <div class="layui-input-inline">
+                    <select name="userType" class="userType">
+                        <option value="">请选择</option>
+                        <option value="1">个人用户</option>
+                        <option value="2">企业用户</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <a class="layui-btn search_btn">查询</a>
+        </div>
+        <permission value="sys:userInfo:add">
+            <div class="layui-inline">
+                <a class="layui-btn layui-btn-normal UserInfoAdd_btn">添加用户</a>
+            </div>
+        </permission>
+        <!--<div class="layui-inline">-->
+        <!--<a class="layui-btn layui-btn-danger batchDel">批量删除</a>-->
+        <!--</div>-->
+        <!--<div class="layui-inline">
+            <a class="layui-btn layui-btn-warm batchBow">设为借款人</a>
+        </div>
+        <div class="layui-inline">
+            <a class="layui-btn layui-btn-warm batchDep">设为受托人</a>
+        </div>-->
+        <permission value="sys:userInfo:restPassword">
+            <div class="layui-inline">
+                <a class="layui-btn layui-btn-danger batchPassWord">重置密码</a>
+            </div>
+        </permission>
+        <permission value="sys:userInfo:export">
+            <div class="layui-inline">
+                <a class="layui-btn exportBtn">数据导出</a>
+            </div>
+            <div class="layui-inline">
+                <a class="layui-btn exportLogBtn">导出结果</a>
+            </div>
+        </permission>
+        <permission value="sys:userInfo:read">
+            <div class="layui-inline">
+                <a class="layui-btn layui-btn-normal accountInfo">账户信息</a>
+            </div>
+        </permission>
+        <permission value="sys:userInfo:accountFreeze">
+            <div class="layui-inline">
+                <a class="layui-btn layui-btn-normal accountFreeze">账户解冻</a>
+            </div>
+        </permission>
+        <permission value="sys:userInfo:accountThawing">
+            <div class="layui-inline">
+                <a class="layui-btn layui-btn-normal accountThawing">账户冻结</a>
+            </div>
+        </permission>
+    </form>
+</blockquote>
+
+<table class="layui-table" id="UserInfoTable" lay-filter="tableFilter"></table>
+
+<!-- 分页控件div -->
+<div id="pageDiv"></div>
+
+<!-- 表头工具栏 -->
+<script type="text/html" id="headerToolbar">
+    当前在线用户数：<label id="aliveLoginCountLbl">0</label>
+</script>
+
+<!-- 工具栏模板 -->
+<div style="display: none;" id="toolBar">
+    <permission value="sys:userInfo:read">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    </permission>
+    <!--<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
+    <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+    <permission value="sys:userInfo:enableAndDisable">
+        <a class="layui-btn layui-btn-{{d.status == 0 ? 'normal' : 'warm'}} layui-btn-xs"
+           lay-event="{{d.status == 0 ? 'enable' : 'disable'}}">{{d.status == 0 ? "启用" : "禁用"}}</a>
+    </permission>
+    <permission value="sys:userInfo:updateRefphone">
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="updateUserReferee">修改推荐人</a>
+    </permission>
+    <!--<permission value="sys:userInfo:searchUserAccount">-->
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="searchUserAccount">查看用户账户</a>
+    <!--</permission>-->
+</div>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="userInfoList.js"></script>
+<script type="text/html" id="accountStatusTpl">
+    {{#  if(d.accountStatus === 0){ }}
+    <div>{{"未开通"}}</div>
+    {{#  } }}
+    {{#  if(d.accountStatus === 1){ }}
+    <div>{{"已开通"}}</div>
+    {{#  } }}
+    {{#  if(d.accountStatus === 2){ }}
+    <div>{{"已注销"}}</div>
+    {{#  } }}
+</script>
+<script type="text/html" id="sourceTpl">
+    {{#  if(d.source === 1){ }}
+    <div>{{"PC"}}</div>
+    {{#  } }}
+    {{#  if(d.source === 2){ }}
+    <div>{{"APP"}}</div>
+    {{#  } }}
+    {{#  if(d.source === 3){ }}
+    <div>{{"WX"}}</div>
+    {{#  } }}
+    {{#  if(d.source === 4){ }}
+    <div>{{"安卓"}}</div>
+    {{#  } }}
+    {{#  if(d.source === 5){ }}
+    <div>{{"IOS"}}</div>
+    {{#  } }}
+    {{#  if(d.source === 6){ }}
+    <div>{{"ADMIN"}}</div>
+    {{#  } }}
+    {{#  if(d.source === 7){ }}
+    <div>{{"API"}}</div>
+    {{#  } }}
+</script>
+<script type="text/html" id="custTypeTpl">
+    {{#  if(d.custType === 1){ }}
+    <div>{{"个人出借用户"}}</div>
+    {{#  } }}
+    {{#  if(d.custType === 2){ }}
+    <div>{{"个人融资用户"}}</div>
+    {{#  } }}
+    {{#  if(d.custType === 3){ }}
+    <div>{{"企业融资用户"}}</div>
+    {{#  } }}
+    {{#  if(d.custType === 4){ }}
+    <div>{{"企业担保用户"}}</div>
+    {{#  } }}
+    {{#  if(d.custType === null){ }}
+    <div>{{"未定义"}}</div>
+    {{#  } }}
+    {{#  if(d.custType === ""){ }}
+    <div>{{"未定义"}}</div>
+    {{#  } }}
+</script>
+</body>
+</html>

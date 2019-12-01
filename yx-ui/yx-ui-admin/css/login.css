@@ -1,0 +1,118 @@
+html,body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    overflow: hidden;
+}
+
+.video-player {
+    background-color: transparent;
+    display: block;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+}
+
+.video_mask {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 0;
+    background-image: url(../images/login_back.png);
+    background-size: cover;
+}
+
+.login_tier {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    background-color: #000000;
+    opacity: 0.3;
+    filter: alpha(opacity=30);
+}
+
+.login-lef {
+    /*float: left;*/
+    /*padding: 45px 0 0 0;*/
+    position: absolute;
+    top: 45px;
+    left: 6%;
+    z-index: 99;
+}
+
+.login-lef .logo {
+    width: 157px;
+}
+
+.login-main {
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;
+    position: relative;
+    left: 0;
+    top: 0;
+    z-index: 99;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.login {
+    height: 260px;
+    width: 260px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 4px;
+    position: absolute;
+    right: 70px;
+    top: 50%;
+    margin-top: -150px;
+}
+
+.login h1 {
+    text-align: center;
+    color: #409EFF;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.form_code {
+    position: relative;
+}
+
+.form_code .code {
+    position: absolute;
+    right: 0;
+    top: 1px;
+    cursor: pointer;
+}
+
+.login_btn {
+    width: 100%;
+    background: #3080FE;
+    border-radius: 38px;
+}
+.login_btn:hover {
+    background: #66B1FF;
+}
+
+.login_footer {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    left: 0;
+    bottom: 50px;
+    z-index: 99;
+}
+
+.login_footer p {
+    font-size: 15px;
+    color: #ffffff;
+    text-align: center;
+}

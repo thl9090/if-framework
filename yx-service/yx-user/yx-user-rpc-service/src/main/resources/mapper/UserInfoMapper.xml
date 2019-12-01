@@ -1,0 +1,778 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.user.dao.mapper.UserInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.user.model.UserInfo">
+        <result column="id" property="id" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="phone" property="phone" />
+        <result column="password" property="password" />
+        <result column="exkey" property="exkey" />
+        <result column="user_type" property="userType" />
+        <result column="user_name" property="userName" />
+        <result column="real_name" property="realName" />
+        <result column="id_type" property="idType" />
+        <result column="id_number" property="idNumber" />
+        <result column="acno" property="acno" />
+        <result column="status" property="status" />
+        <result column="account_status" property="accountStatus" />
+        <result column="company_name" property="companyName" />
+        <result column="source" property="source" />
+        <result column="ref_phone" property="refPhone" />
+        <result column="email" property="email" />
+        <result column="cust_no" property="custNo" />
+        <result column="cust_type" property="custType" />
+        <result column="register_phone" property="registerPhone" />
+        <result column="bank_name" property="bankName" />
+        <result column="card_no" property="cardNo" />
+        <result column="bank_mobile" property="bankMobile" />
+        <result column="is_new_user" property="isNewUser" />
+
+    </resultMap>
+
+    <resultMap id="VOResultMap" extends="BaseResultMap" type="com.yx.user.model.vo.UserInfoVO">
+        <result column="isUsedHandPwd" property="isUsedHandPwd" />
+        <result column="openAuthStr" property="openAuthStr" />
+        <result column="isRisk" property="isRisk" />
+        <result column="channelFlow" property="channelFlow" />
+        <result column="fddStatusStr" property="fddStatusStr" />
+
+
+    </resultMap>
+
+
+
+
+    <select id="getById" resultMap="BaseResultMap">
+        SELECT
+            u.*
+        FROM  user_info u
+        WHERE
+            u.id=#{id}
+    </select>
+
+    <select id="selectByPhone" resultMap="BaseResultMap">
+        SELECT
+        u.*
+        FROM user_info u
+        WHERE
+        u.phone=#{phone}
+        and u.status = 1
+        limit 1
+    </select>
+
+    <select id="selectByEmail" resultMap="BaseResultMap">
+        SELECT
+        u.*
+        FROM user_info u
+        WHERE
+        u.email=#{email}
+        limit 1
+    </select>
+
+
+    <select id="selectVOById" resultMap="VOResultMap">
+        SELECT
+        u.*,
+        CASE uhp.is_used
+        WHEN 1 THEN 1
+        ELSE 0
+        END as isUsedHandPwd
+
+        FROM  user_info u
+        LEFT  JOIN  user_hand_pwd uhp ON  uhp.user_id=u.id
+        WHERE
+        u.id=#{id}
+    </select>
+
+
+    <select id="getVOById" resultMap="VOResultMap">
+        SELECT
+            u.*,
+            CASE uhp.is_used
+            WHEN 1 THEN 1
+            ELSE 0
+            END as isUsedHandPwd
+
+        FROM  user_info u
+        LEFT  JOIN  user_hand_pwd uhp ON  uhp.user_id=u.id
+
+        WHERE
+            u.id=#{id}
+    </select>
+
+
+    <select id="selectPage"  resultMap="BaseResultMap">
+        SELECT
+        u.*
+        FROM  user_info u
+        WHERE  1=1
+        <!-- 查询条件根据实际的需要去加减 -->
+        <if test="userInfo.useName!=null and userInfo.userName!='' ">
+            AND u.user_name=#{userInfo.userName}
+        </if>
+        <if test="userInfo.status!=null ">
+            AND u.status=#{userInfo.status}
+        </if>
+        ORDER BY  u.id DESC
+    </select>
+
+    <select id="selectVOPage"  resultMap="VOResultMap">
+        SELECT
+        u.*
+
+        FROM user_info u
+        WHERE 1=1
+
+        <if test="userInfoVO.phone!=null">
+            AND u.phone=#{userInfoVO.phone}
+        </if>
+        <if test="userInfoVO.userType!=null">
+            AND u.user_type=#{userInfoVO.userType}
+        </if>
+        <if test="userInfoVO.userName!=null and userInfoVO.userName!='' ">
+            AND u.user_name=#{userInfoVO.userName}
+        </if>
+        <if test="userInfoVO.realName!=null and userInfoVO.realName!='' ">
+            AND u.real_name=#{userInfoVO.realName}
+        </if>
+        <if test="userInfoVO.source!=null ">
+            AND u.source=#{userInfoVO.source}
+        </if>
+        <if test="userInfoVO.custType!=null ">
+            AND u.cust_type=#{userInfoVO.custType}
+        </if>
+        <if test="userInfoVO.createTimeStart!=null">
+            AND  u.create_time &gt;= #{userInfoVO.createTimeStart}
+        </if>
+        <if test="userInfoVO.createTimeEnd!=null">
+            AND  u.create_time &lt;= #{userInfoVO.createTimeEnd}
+        </if>
+        <if test="userInfoVO.status!=null ">
+            AND u.status=#{userInfoVO.status}
+        </if>
+        <if test="userInfoVO.accountStatus!=null ">
+            AND u.account_status=#{userInfoVO.accountStatus}
+        </if>
+        <if test="userInfoVO.email!=null and userInfoVO.email!='' ">
+            AND u.email=#{userInfoVO.email}
+        </if>
+        <if test="userInfoVO.refPhone!=null ">
+            AND u.ref_phone=#{userInfoVO.refPhone}
+        </if>
+
+        ORDER  BY  u.id DESC
+    </select>
+
+
+
+    <select id="selectMyReferrerOne" resultType="com.yx.user.model.referrer.UserReferrerModel">
+        SELECT
+        b.id,
+        p.id                                            AS productId,
+        concat(
+        substring(u.user_name, 1, 1),
+        '***',
+        substring(
+        u.user_name,
+        char_length(u.user_name),
+        1
+        )
+        ) AS refName
+        ,
+        concat(
+        substring(u.real_name, 1, 1),
+        '***'
+        )
+        as refRealName
+        ,concat(substring(u.id_number, 1, 6), '**********', if(char_length(u.id_number) &lt;= 2, '',
+        substring(u.id_number, char_length(u.id_number) - 3, 4))) as refIdNum
+        ,concat(substring(u.phone, 1, 3),'***',IF (char_length(u.phone) &lt;= 2,'',
+        substring(u.phone,char_length(u.phone) - 3,3)))
+        as refPhone
+        ,date_format(u.create_time, '%Y-%m-%d') as refCreateTime
+        ,ifnull(p.title,'暂无') AS titles
+        ,ifnull(concat(b.sure_amount,'元'), '0.00') as refBidAmount
+        ,ifnull(
+        concat(IF (
+        1 = 3,
+        p.product_deadline,
+        p.product_deadline * 30
+        ),
+        '天'
+        ),
+        '暂无'
+        ) AS biddeadline
+        ,ifnull(p.title,'暂无')                                    AS title
+        ,ifnull(concat(round(p.profit,2),'%'),'暂无')                                    as profit
+        ,ifnull(case p.repurchase_mode
+        when 1
+        then '等额本息'
+        when 2
+        then '先息后本'
+        when 3
+        then '按日计息'
+        when 4
+        then '其它'
+        end,'暂无')      as  repurchase,
+        ifnull(date_format(b.update_time, '%Y-%m-%d'),'暂无' )as investmentTime,
+        ifnull(date_format(b.update_time, '%Y-%m-%d'),'暂无' )                  as loanTime,
+        (case p.asset_type
+        when 3
+        then '安'
+        when 4
+        then '私'
+        when 5
+        then '尊'
+        when 6
+        then '福'
+        when 8
+        then '新'
+        when 10
+        then '净'
+        end) as productType
+        FROM
+        user_info u
+        LEFT JOIN bid_order b ON u.id = b.user_id
+        AND b.order_status = 3
+        RIGHT JOIN product p on p.id = b.product_id and p.product_type NOT in (1)
+        WHERE
+        1=1
+        and  u.id = #{model.refUserId}
+    </select>
+
+    <select id="selectAllReferrerBorrow" resultType="java.lang.Long">
+        SELECT
+        u2.id
+        FROM
+        user_info u2
+        LEFT JOIN user_info u1 ON u1.phone = u2.ref_phone
+        AND u1.`status` = u2.`status`
+        and u1.status = 1
+        and u2.status = 1
+        WHERE
+        1=1
+        <if test="userList != null ">
+            and u1.id in
+            <foreach collection="userList" item="item" index="index"
+                     open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        /*and u2.is_borrower = 1*/
+    </select>
+
+    <select id="selectMyReferrerBorrow" resultType="com.yx.user.model.referrer.UserReferrerModel">
+        SELECT
+        u1.id AS refUserId,
+        concat(
+        substring(u1.user_name, 1, 1),
+        '***',
+        substring(
+        u1.user_name,
+        char_length(u1.user_name),
+        1
+        )
+        ) AS refName,
+        ifnull(sum(p.product_amount), '0.00') refBidAmount,
+        date_format(u1.create_time, '%Y-%m-%d') AS refCreateTime
+        FROM
+        user_info u1
+        LEFT JOIN  product p ON u1.id = p.borrow_user_id
+
+        WHERE
+        1 = 1
+        AND p.product_status IN (10, 11, 12)
+        <if test="model.refUserList != null ">
+            and u1.id in
+            <foreach collection="model.refUserList" item="item" index="index"
+                     open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        AND u1.status = 1
+        GROUP BY u1.id
+        ORDER BY
+        p.create_time DESC
+    </select>
+
+    <select id="selectMyReferrerBorrowOne" resultType="com.yx.user.model.referrer.UserReferrerModel">
+        SELECT
+        concat(
+        substring(u.user_name, 1, 1),
+        '***',
+        substring(
+        u.user_name,
+        char_length(u.user_name),
+        1
+        )
+        ) AS refName
+        ,concat(
+        substring(u.real_name, 1, 1),
+        '***'
+        ) as refRealName
+        ,concat(substring(u.id_number, 1, 6), '**********', if(char_length(u.id_number) &lt;= 2, '',
+        substring(u.id_number, char_length(u.id_number) - 3, 4))) as refIdNum
+        ,concat(substring(u.phone, 1, 3),'***',IF (char_length(u.phone) &lt;= 2,'',
+        substring(u.phone,char_length(u.phone) - 3,3)))
+        as refPhone
+        ,date_format(u.create_time, '%Y-%m-%d') as refCreateTime
+        ,ifnull(p.title,'暂无') AS titles
+        ,ifnull(concat(p.product_amount,'元'), '暂无') as refBidAmount
+        ,ifnull(
+        concat(IF (
+        1 = 3,
+        p.product_deadline,
+        p.product_deadline * 30
+        ),
+        '天'
+        ),
+        '暂无'
+        ) AS biddeadline
+        ,ifnull(concat(round(p.profit,2),'%'),'暂无')                                    as profit
+        ,ifnull(case p.repurchase_mode
+        when 1
+        then '等额本息'
+        when 2
+        then '先息后本'
+        when 3
+        then '按日计息'
+        when 4
+        then '其它'
+        end,'暂无')                                                                as  repurchase,
+        ifnull(date_format(p.create_time, '%Y-%m-%d'),'暂无' )                     as investmentTime
+        ,ifnull(date_format(lo.update_time, '%Y-%m-%d'),'暂无' )                  as loanTime,
+        (case p.asset_type
+        when 3
+        then '安'
+        when 4
+        then '私'
+        when 5
+        then '尊'
+        when 6
+        then '福'
+        when 8
+        then '新'
+        when 10
+        then '净'
+        end) as productType,
+        p.id                                            AS productId
+        FROM
+        user_info u
+        LEFT JOIN product p on u.id = p.borrow_user_id and p.product_status in (10,11,12)
+        LEFT JOIN loan_record lo on p.id = lo.product_id and lo.loan_status = 3
+        WHERE
+        1=1
+        and  u.id = #{model.refUserId}
+        and u.status = 1
+        ORDER BY
+	    p.create_time DESC
+    </select>
+
+    <select id="selectByTransactorPhone" resultMap="BaseResultMap">
+        SELECT
+    		u.*
+    	FROM user_info u
+    	WHERE
+    	   	u.ref_phone=#{phone}
+    	   	AND u.status = 1
+    </select>
+
+    <select id="selectMyReferrerCountById" resultType="java.lang.Long">
+        SELECT
+            uu.id
+        FROM
+            user_info ui
+        LEFT JOIN user_info uu ON ui.phone = uu.ref_phone
+        WHERE
+            ui.id = #{id}
+            AND ui.status = 1
+    </select>
+    <select id="selectEffective" resultType="java.lang.Long">
+        SELECT
+        bo.user_id
+        FROM
+        bid_order bo
+        LEFT JOIN product p ON bo.product_id = p.id
+        AND p.product_status IN (10, 11, 12)
+        where bo.user_id in
+        <foreach collection="recomList"   item = "item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND p.product_type != 1
+        AND bo.order_status = 3
+        GROUP BY bo.user_id
+    </select>
+
+    <select id="selectCountRegister" resultType="java.lang.Integer">
+        SELECT
+            count(1)
+        FROM
+            user_info
+    </select>
+
+    <select id="selectExpList" resultType="com.yx.user.model.vo.UserInfoExp">
+        SELECT
+        u.phone                             as phone,
+        (case u.user_type
+        when 2 then '企业用户'
+        when 1 then '个人用户'
+        else ''
+        end
+        )                                  as userType,
+        u.user_name                        as userName,
+        u.email                            as email,
+        u.real_name                        as realName,
+        (case u.id_type
+        when 2 then '营业执照'
+        when 1 then '身份证'
+        else ''
+        end
+        )                                  as idType,
+        u.id_number                        as idNumber,
+        u.acno                             as acno,
+        (case u.status
+        when 1 then '有效'
+        when 0 then '无效'
+        else ''
+        end
+        )                                  as status,
+        (case u.account_status
+        when 1 then '已开通'
+        when 0 then '未开通'
+        else ''
+        end
+        )                                  as accountStatus,
+        (case u.cust_type
+        when 1 then '个人出借用户'
+        when 2 then '个人融资用户'
+        when 3 then '企业融资用户'
+        when 4 then '企业担保用户'
+        else ''
+        end
+        )                                  as custTypeStr,
+        u.company_name                     as companyName,
+        u.ref_phone                        as refPhone,
+        (case u.source
+        when 1 then 'PC'
+        when 2 then 'app'
+        when 3 then '微信'
+        when 4 then '安卓'
+        when 5 then 'IOS'
+        when 6 then 'ADMIN'
+        when 7 then 'API'
+        else ''
+        end
+        )                                  as sourceStr,
+        u.create_time                      as createTime,
+        (
+        SELECT
+        group_concat(
+        CASE auth_type
+        WHEN 1 THEN '自动出借'
+        WHEN 2 THEN '自动还款'
+        WHEN 3 THEN '手续费授权'
+        WHEN 4 THEN '出借撤销'
+        WHEN 5 THEN '自动垫付'
+        WHEN 6 THEN '放款手续费'
+        ELSE '' END
+        )
+        FROM auth_record
+        WHERE  user_id=u.id  AND auth_status=2
+        ) AS openAuthStr,
+        u.cust_no                 as custNo,
+        u.register_phone          as registerPhone,
+        u.bank_name               as bankName,
+        u.card_no                 as cardNo,
+        u.bank_mobile             as bankMobile,
+        (case (SELECT count(id)
+        FROM  risk_user_result WHERE user_id=u.id)
+        when 0 then '否'
+        when 1 then '是'
+        ELSE  '否'
+        END
+        )as isRisk
+        FROM user_info u
+        WHERE 1=1
+        <if test="userInfo.phone!=null">
+            AND u.phone=#{userInfo.phone}
+        </if>
+        <if test="userInfo.userType!=null">
+            AND u.user_type=#{userInfo.userType}
+        </if>
+        <if test="userInfo.userName!=null and userInfo.userName!='' ">
+            AND u.user_name=#{userInfo.userName}
+        </if>
+        <if test="userInfo.realName!=null and userInfo.realName!='' ">
+            AND u.real_name=#{userInfo.realName}
+        </if>
+        <if test="userInfo.source!=null ">
+            AND u.source=#{userInfo.source}
+        </if>
+        <if test="userInfo.custType!=null ">
+            AND u.cust_type=#{userInfo.custType}
+        </if>
+        <if test="userInfo.createTimeStart!=null">
+            AND  u.create_time &gt;= #{userInfo.createTimeStart}
+        </if>
+        <if test="userInfo.createTimeEnd!=null">
+            AND  u.create_time &lt;= #{userInfo.createTimeEnd}
+        </if>
+        <if test="userInfo.status!=null ">
+            AND u.status=#{userInfo.status}
+        </if>
+        <if test="userInfo.accountStatus!=null ">
+            AND u.account_status=#{userInfo.accountStatus}
+        </if>
+        <if test="userInfo.email!=null and userInfo.email!='' ">
+            AND u.email=#{userInfo.email}
+        </if>
+        <if test="userInfo.refPhone!=null ">
+            AND u.ref_phone=#{userInfo.refPhone}
+        </if>
+        ORDER  BY  u.id DESC
+    </select>
+
+    <select id="selectVOIsDepositaryPage" resultMap="VOResultMap">
+        SELECT
+        u.*
+        FROM  user_info u
+        WHERE  1=1
+        and u.status = 1
+        AND u.account_status=1
+        and u.cust_type in (2,3)
+        <if test="userInfoVO.phone!=null">
+            AND u.phone=#{userInfoVO.phone}
+        </if>
+        <if test="userInfoVO.userName!=null and userInfoVO.userName!='' ">
+            AND u.uesr_name=#{userInfoVO.userName}
+        </if>
+        <if test="userInfoVO.realName!=null and userInfoVO.realName!='' ">
+            AND u.real_name=#{userInfoVO.realName}
+        </if>
+        <if test="userInfoVO.createTimeStart!=null">
+            AND  u.create_time &gt;= #{userInfoVO.createTimeStart}
+        </if>
+        <if test="userInfoVO.createTimeEnd!=null">
+            AND  u.create_time &lt;= #{userInfoVO.createTimeEnd}
+        </if>
+
+        ORDER  BY  u.id DESC
+    </select>
+
+    <select id="selectByGuaranteeId" resultMap="BaseResultMap">
+        SELECT
+            ui.*
+        FROM
+            user_info ui
+        LEFT JOIN guarantee_info gi ON ui.id = gi.user_id
+        WHERE
+            gi.id = #{guaranteeId}
+        AND ui.cust_type = 4
+    </select>
+
+    <update id="updateUserReferee" >
+        UPDATE user_info ui
+        SET ui.ref_phone = #{userInfoVO.refPhone}
+        WHERE
+            ui.id = #{userInfoVO.id}
+        AND ui.status = 1
+    </update>
+
+    <select id="selectCountByIdnumber" resultType="java.lang.Integer">
+          SELECT count(id)
+          FROM  user_info
+          WHERE
+          account_status=1
+          AND id_number=#{idNumber}
+
+    </select>
+
+    <select id="selectCountByAcno" resultType="java.lang.Integer">
+        SELECT count(id)
+        FROM  user_info
+        WHERE
+        account_status=1
+        AND acno=#{acno}
+
+    </select>
+
+    <select id="selectCountByCustNo" resultType="java.lang.Integer">
+        SELECT count(id)
+        FROM  user_info
+        WHERE
+        account_status=1
+        AND cust_no=#{custNo}
+
+    </select>
+
+    <select id="selectPhoneById" resultType="java.lang.Long">
+        SELECT
+            phone
+        FROM
+            user_info
+        WHERE
+            id = #{userId}
+        AND status = 1
+    </select>
+
+    <select id="selectByPhones" resultType="com.yx.user.model.RangeUserModel">
+        select
+        ui.id as userId,
+        ui.phone as phone,
+        ui.user_name as userName
+        from user_info ui
+        where ui.phone in
+        <foreach collection="phones" open="(" separator="," close=")" item="item">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectAllUserId" resultType="java.lang.Long">
+        select id
+        from user_info
+    </select>
+
+    <update id="updateUserInfoForBandCard">
+        update user_info
+        SET
+        bank_name=NULL ,
+        card_no=NULL ,
+        bank_mobile=NULL
+        WHERE id=#{userId}
+
+    </update>
+
+
+    <select id="selectOpenAccountUserVOPage" resultMap="VOResultMap">
+        SELECT
+        u.id,
+        u.phone,
+        u.user_name ,
+        u.real_name ,
+        u.acno,
+        u.cust_no,
+        u.bank_name,
+        u.card_no,
+        uaf.channel_flow as channelFlow,
+        1 as fee,
+        uaf.update_time
+
+
+        FROM user_info u
+        LEFT JOIN user_account_flow uaf ON  uaf.user_id=u.id
+        WHERE 1=1
+        AND u.user_type=1
+        AND u.account_status=1
+        AND uaf.status=1
+        AND uaf.type in (1,2)
+
+        <if test="userInfoVO.phone!=null">
+            AND u.phone=#{userInfoVO.phone}
+        </if>
+        <if test="userInfoVO.userName!=null and userInfoVO.userName!='' ">
+            AND u.user_name=#{userInfoVO.userName}
+        </if>
+        <if test="userInfoVO.realName!=null and userInfoVO.realName!='' ">
+            AND u.real_name=#{userInfoVO.realName}
+        </if>
+
+        <if test="userInfoVO.createTimeStart!=null">
+            AND  uaf.update_time &gt;= #{userInfoVO.createTimeStart}
+        </if>
+        <if test="userInfoVO.createTimeEnd!=null">
+            AND  uaf.update_time &lt;= #{userInfoVO.createTimeEnd}
+        </if>
+
+        ORDER  BY  u.id DESC
+
+    </select>
+
+
+    <select id="selectOpenAccountUserExp" resultType="com.yx.user.model.vo.UserOpenAccountExp">
+        SELECT
+        u.phone as phone,
+        u.user_name as userName,
+        u.real_name as realName,
+        u.bank_name as bankName,
+        u.card_no as cardNo,
+        uaf.channel_flow as channelFlow,
+        uaf.update_time as updateTime,
+        1 as fee
+
+
+        FROM user_info u
+        LEFT JOIN user_account_flow uaf ON  uaf.user_id=u.id
+        WHERE 1=1
+        AND u.user_type=1
+        AND u.account_status=1
+        AND uaf.status=1
+        AND uaf.type in (1,2)
+
+        <if test="userInfoVO.phone!=null">
+            AND u.phone=#{userInfoVO.phone}
+        </if>
+        <if test="userInfoVO.userName!=null and userInfoVO.userName!='' ">
+            AND u.user_name=#{userInfoVO.userName}
+        </if>
+        <if test="userInfoVO.realName!=null and userInfoVO.realName!='' ">
+            AND u.real_name=#{userInfoVO.realName}
+        </if>
+
+        <if test="userInfoVO.createTimeStart!=null">
+            AND  uaf.update_time &gt;= #{userInfoVO.createTimeStart}
+        </if>
+        <if test="userInfoVO.createTimeEnd!=null">
+            AND  uaf.update_time &lt;= #{userInfoVO.createTimeEnd}
+        </if>
+
+        ORDER  BY  u.id DESC
+
+    </select>
+
+
+
+
+    <!--   法大大相关方法 start  -->
+    <select id="selectFddAutoRegisterUser" resultMap="BaseResultMap">
+          SELECT  ui.*
+          FROM  user_info ui
+          WHERE 1=1
+          AND ui.id not in (SELECT user_id FROM fdd_user WHERE type=1)
+          and ui.cust_type in (1,2,4)
+          ORDER BY ui.id
+
+    </select>
+
+    <select id="selectUserByIdNumber" resultType="com.yx.user.model.vo.UserInfoVO">
+        SELECT
+        *
+        FROM
+        user_info ui
+        WHERE
+        ui.id_number = #{idNumber}
+        AND ui.account_status = 1
+        ORDER BY
+        ui.id
+        LIMIT 1
+    </select>
+
+    <select id="selectVoByProductId"  resultType="com.yx.user.model.vo.UserInfoVO">
+        SELECT
+            ui.*
+        FROM
+            user_info ui
+        LEFT JOIN product pro ON ui.id = pro.borrow_user_id
+        WHERE
+            pro.id = #{productId}
+    </select>
+
+    <!--     法大大相关方法 end        -->
+
+
+
+</mapper>

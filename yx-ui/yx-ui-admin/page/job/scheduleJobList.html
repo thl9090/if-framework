@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>定时任务</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_495397_jzxo653foj6skyb9.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+</head>
+<body class="childrenBody">
+<blockquote class="layui-elem-quote news_search">
+    <form class="layui-form"  id="dataForm">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">bean名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="" placeholder="bean名称" class="layui-input beanName">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">方法名</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="" placeholder="方法名" class="layui-input methodName">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="" placeholder="备注" class="layui-input remark">
+                </div>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <a class="layui-btn search_btn">查询</a>
+        </div>
+        <permission value="sys:job:read">
+            <div class="layui-inline">
+                <a class="layui-btn logList_btn">日志列表</a>
+            </div>
+        </permission>
+        <permission value="sys:job:add">
+            <div class="layui-inline">
+                <a class="layui-btn layui-btn-normal ScheduleJobAdd_btn">添加定时任务</a>
+            </div>
+        </permission>
+        <permission value="sys:job:delete">
+            <div class="layui-inline">
+                <a class="layui-btn layui-btn-danger batchDel">批量删除</a>
+            </div>
+        </permission>
+        <!--<div class="layui-inline">
+            <a class="layui-btn layui-btn-warm batchPause">暂停</a>
+        </div>
+        <div class="layui-inline">
+            <a class="layui-btn layui-btn-warm batchResume">恢复</a>
+        </div>
+        <div class="layui-inline">
+            <a class="layui-btn layui-btn-warm batchRun">立即执行</a>
+        </div>-->
+    </form>
+</blockquote>
+
+<table class="layui-form layui-border-box layui-table-view" id="ScheduleJobTable" lay-filter="tableFilter"></table>
+
+<!-- 分页控件div -->
+<div id="pageDiv"></div>
+<!-- 工具栏模板 -->
+<div style="display: none;" id="toolBar">
+    <permission value="sys:job:read">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    </permission>
+    <permission value="sys:job:update">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    </permission>
+    <permission value="sys:job:delete">
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </permission>
+    <permission value="sys:job:pauseAndResume">
+        <a class="layui-btn layui-btn-{{d.status == 0 ? 'normal' : 'warm'}} layui-btn-xs" lay-event="{{d.status == 0 ? 'pause' : 'resume'}}">{{d.status == 0 ? "暂停" : "启用"}}</a>
+    </permission>
+    <permission value="sys:job:run">
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="run">立即执行</a>
+    </permission>
+</div>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="scheduleJobList.js"></script>
+</body>
+</html>

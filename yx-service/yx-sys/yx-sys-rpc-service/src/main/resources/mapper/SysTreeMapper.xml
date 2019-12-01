@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.dao.mapper.SysTreeMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.sys.model.SysTree">
+        <result column="id" property="id"/>
+        <result column="parentId" property="parentId"/>
+        <result column="name" property="name"/>
+        <result column="type_" property="type"/>
+    </resultMap>
+    <select id="selectDeptTree"  resultMap="BaseResultMap">
+         SELECT a.id AS id,a.dept_name AS name,
+         a.parent_id AS parentId FROM sys_dept a
+        left join sys_dept b on a.parent_id = b.id
+        where a.is_del = 0
+        <if test="id != null">
+           and a.id != #{id} and a.parent_id != #{id}
+        </if>
+    </select>
+    <select id="selectMenuTree"  resultMap="BaseResultMap">
+         SELECT a.id AS id,a.menu_name AS name,
+         a.parent_id AS parentId, a.menu_type as type_ FROM sys_menu a
+        left join sys_menu b on a.parent_id = b.id
+        where a.is_del = 0
+        <if test="id != null">
+           and a.id != #{id} and a.parent_id != #{id}
+        </if>
+        <if test="menuType != null">
+            <choose>
+                <when test="menuType == 0">
+                    <!-- 目录,上级菜单只能是目录 -->
+                    and a.menu_type = 0
+                </when>
+                <when test="menuType == 1">
+                    <!-- 菜单,上级菜单只能是目录和菜单 -->
+                    and a.menu_type = 0
+                </when>
+                <when test="menuType == 2">
+                    <!-- 按钮,上级菜单只能是目录和菜单 -->
+                    and (a.menu_type = 0 or a.menu_type = 1)
+                </when>
+            </choose>
+        </if>
+        ORDER BY a.sort_no
+    </select>
+
+    <select id="selectGuaranteeInfoTree" resultMap="BaseResultMap">
+        SELECT a.id AS id,a.name AS name
+         FROM guarantee_info a
+        where 1=1
+        <if test="id != null">
+            and a.id != #{id}
+        </if>
+    </select>
+    <select id="selectSysUserTree" resultMap="BaseResultMap">
+        SELECT a.id AS id,a.user_name AS name
+         FROM sys_user a
+    </select>
+
+    <select id="selectContentTree" resultMap="BaseResultMap">
+        select id as id,title AS name,parent_id AS parentId from sys_content where status = '1'
+        <if test="parent_id != null and parent_id != '' ">
+            and parent_id = #{parent_id}
+        </if>
+    </select>
+
+    <select id="selectGuaranteeUsertree" resultMap="BaseResultMap">
+        SELECT
+                ui.id as id,
+                ui.real_name  as name
+        FROM
+                user_info ui
+        WHERE ui.cust_type = 4
+        and ui.`status` = 1
+    </select>
+</mapper>

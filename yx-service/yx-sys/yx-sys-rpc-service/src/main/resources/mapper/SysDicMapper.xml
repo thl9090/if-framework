@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.dao.mapper.SysDicMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.sys.model.SysDic">
+    <result column="id" property="id" />
+    <result column="is_del" property="isDel" />
+    <result column="enable_" property="enable" />
+    <result column="remark_" property="remark" />
+    <result column="create_by" property="createBy" />
+    <result column="create_time" property="createTime" />
+    <result column="update_by" property="updateBy" />
+    <result column="update_time" property="updateTime" />
+        <result column="type_" property="type" />
+        <result column="code_" property="code" />
+        <result column="code_text" property="codeText" />
+        <result column="parent_type" property="parentType" />
+        <result column="parent_code" property="parentCode" />
+        <result column="sort_no" property="sortNo" />
+        <result column="editable_" property="editable" />
+    </resultMap>
+
+    <select id="selectByTypeAndCode" resultMap="BaseResultMap">
+        SELECT * FROM
+        sys_dic
+        WHERE
+        AND is_del=0
+        AND type_= #{type}
+        and code_ = #{code};
+    </select>
+
+</mapper>

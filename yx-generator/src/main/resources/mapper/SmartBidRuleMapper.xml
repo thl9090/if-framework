@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.mapper.SmartBidRuleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.sys.entity.SmartBidRule">
+    <result column="id" property="id" />
+        <result column="smart_bid_plan_id" property="smartBidPlanId" />
+        <result column="borrow_deadline" property="borrowDeadline" />
+        <result column="profit" property="profit" />
+        <result column="add_profit" property="addProfit" />
+        <result column="repurchase_mode" property="repurchaseMode" />
+        <result column="lock_deadline" property="lockDeadline" />
+        <result column="min_apply_amount" property="minApplyAmount" />
+        <result column="max_apply_amount" property="maxApplyAmount" />
+        <result column="apply_fee" property="applyFee" />
+    </resultMap>
+
+</mapper>

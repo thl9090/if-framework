@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.dao.mapper.SysMessageCenterMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.sys.model.SysMessageCenter">
+        <result column="id" property="id" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="title" property="title" />
+        <result column="url" property="url" />
+        <result column="content" property="content" />
+        <result column="description" property="description" />
+        <result column="sketch" property="sketch" />
+        <result column="keywords" property="keywords" />
+        <result column="file_url" property="fileUrl" />
+        <result column="type" property="type" />
+        <result column="status" property="status" />
+        <result column="ranking" property="ranking" />
+    </resultMap>
+
+    <!-- 扩展查询映射结果 -->
+    <resultMap id="VOResultMap" extends="BaseResultMap" type="com.yx.sys.model.vo.SysMessageCenterVO" >
+        <result column="beforeTitle" property="beforeTitle"/>
+        <result column="beforeId" property="beforeId"/>
+        <result column="nextTitle" property="nextTitle"/>
+        <result column="nextId" property="nextId"/>
+
+    </resultMap>
+
+    <sql id="selectPageByEntitySql">
+        id,create_time,create_by,update_time,update_by,title,url,description,
+        sketch,keywords,file_url,type,status,ranking,content
+    </sql>
+
+    <select id="selectVOById" resultMap="VOResultMap">
+        SELECT
+        smc.*,
+        (SELECT id FROM sys_message_center WHERE type=smc.type AND id &lt; smc.id ORDER BY id desc limit 1) as beforeId,
+        (SELECT title FROM sys_message_center WHERE type=smc.type AND id &lt; smc.id ORDER BY id desc limit 1) as beforeTitle,
+        (SELECT id FROM sys_message_center WHERE type=smc.type AND id &gt; smc.id ORDER BY id  limit 1) as nextId,
+        (SELECT title FROM sys_message_center WHERE type=smc.type AND id &gt; smc.id ORDER BY id  limit 1) as nextTitle
+
+        FROM sys_message_center smc
+        WHERE  smc.id=#{id}
+
+    </select>
+
+    <select id="selectPageByEntity" resultType="com.yx.sys.model.SysMessageCenter">
+      select
+        id,create_time,create_by,update_time,update_by,title,url,description,
+        sketch,keywords,file_url,type,status,ranking
+      from sys_message_center where 1 = 1
+        <if test="params.title != null and params.title != ''">
+          and title like CONCAT(#{params.title},'%')
+        </if>
+        <if test="params.type != null ">
+            and type = #{params.type}
+        </if>
+        <if test="params.status != null ">
+            and status = #{params.status}
+        </if>
+        order by ranking desc, id desc
+    </select>
+
+    <select id="selectList" resultType="com.yx.sys.model.SysMessageCenter">
+        select
+        <include refid="selectPageByEntitySql"/>
+        from sys_message_center where 1 = 1
+        <if test="messageCenter.title != null and messageCenter.title != ''">
+            and title like CONCAT(#{messageCenter.title},'%')
+        </if>
+        <if test="messageCenter.type != null ">
+            and type = #{messageCenter.type}
+        </if>
+        <if test="messageCenter.status != null ">
+            and status = #{messageCenter.status}
+        </if>
+    </select>
+
+    <select id="selectAuthorityInformation" resultType="com.yx.sys.model.SysMessageCenter">
+        select
+        <include refid="selectPageByEntitySql"/>
+        from sys_message_center where 1 = 1
+        <if test="sysMessageCenter.type != null ">
+            and type = #{sysMessageCenter.type}
+        </if>
+        <if test="sysMessageCenter.status != null ">
+            and status = #{sysMessageCenter.status}
+        </if>
+        order by ranking desc, id desc limit 3
+    </select>
+
+</mapper>

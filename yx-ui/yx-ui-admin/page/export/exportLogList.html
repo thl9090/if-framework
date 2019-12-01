@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>导出日志记录</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_495397_jzxo653foj6skyb9.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+</head>
+<body class="childrenBody">
+<blockquote class="layui-elem-quote news_search">
+    <div class="layui-inline">
+        <div class="layui-input-inline">
+            <input type="text" value="" placeholder="请输入关键字" class="layui-input search_input">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <a class="layui-btn search_btn">查询</a>
+    </div>
+    <!--<div class="layui-inline">-->
+        <!--<a class="layui-btn layui-btn-danger batchDel">批量删除</a>-->
+    <!--</div>-->
+</blockquote>
+
+<table class="layui-table" id="ExportLogTable" lay-filter="tableFilter"></table>
+
+<!-- 分页控件div -->
+<div id="pageDiv"></div>
+<!-- 工具栏模板 -->
+<div style="display: none;" id="toolBar">
+    <!--<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>-->
+    <!--<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
+    <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+    {{d.status == 1 ? '<a class="layui-btn layui-btn-xs" lay-event="download">下载</a>' : ''}}
+</div>
+<div style="display: none;" id="toolBar2">
+
+</div>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="exportLogList.js"></script>
+<script type="text/html" id="typeTpl">
+    {{#  if(d.type === 1){ }}
+    <div>{{"用户信息导出"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 2){ }}
+    <div>{{"标的信息导出"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 3){ }}
+    <div>{{"个人流水的信息导出"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 4){ }}
+    <div>{{"投标列表的信息导出"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 5){ }}
+    <div>{{"渠道用户基本信息"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 6){ }}
+    <div>{{"渠道待还款信息"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 7){ }}
+    <div>{{"渠道已还清信息"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 9){ }}
+    <div>{{"充值统计信息"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 10){ }}
+    <div>{{"提现统计信息"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 11){ }}
+    <div>{{"借款申请信息"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 13){ }}
+    <div>{{"用户反馈信息"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 36){ }}
+    <div>{{"逾期还款计划信息"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 37){ }}
+    <div>{{"待还还款计划信息"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 38){ }}
+    <div>{{"已还还款计划信息"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 39){ }}
+    <div>{{"卡券包发放记录"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 40){ }}
+    <div>{{"卡券发放记录"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 41){ }}
+    <div>{{"红包使用记录"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 42){ }}
+    <div>{{"加息券使用记录"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 43){ }}
+    <div>{{"现金券使用记录"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 44){ }}
+    <div>{{"开户绑卡费用"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 45){ }}
+    <div>{{"充值银行手续费列表"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 46){ }}
+    <div>{{"提现银行手续费列表"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 47){ }}
+    <div>{{"授权记录列表"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 48){ }}
+    <div>{{"邮件发送记录列表"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 49){ }}
+    <div>{{"收款计划列表"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 50){ }}
+    <div>{{"智投已加入列表"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 51){ }}
+    <div>{{"智投收益中列表"}}</div>
+    {{#  } }}
+    {{#  if(d.type === 52){ }}
+    <div>{{"智投已结束列表"}}</div>
+    {{#  } }}
+</script>
+
+<script type="text/html" id="statusTpl">
+    {{#  if(d.status === 0){ }}
+    <div>{{"处理中"}}</div>
+    {{#  } }}
+    {{#  if(d.status === 1){ }}
+    <div>{{"已完成"}}</div>
+    {{#  } }}
+</script>
+
+
+</body>
+</html>

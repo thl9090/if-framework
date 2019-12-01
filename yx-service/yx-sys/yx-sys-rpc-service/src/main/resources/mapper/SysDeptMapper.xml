@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.dao.mapper.SysDeptMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.sys.model.SysDept">
+        <result column="id" property="id"/>
+        <result column="is_del" property="isDel"/>
+        <result column="enable_" property="enable"/>
+        <result column="remark_" property="remark"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="unit_id" property="unitId"/>
+        <result column="dept_name" property="deptName"/>
+        <result column="parentName" property="parentName"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="sort_no" property="sortNo"/>
+        <result column="leaf_" property="leaf"/>
+    </resultMap>
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT a.*,b.dept_name parentName FROM sys_dept a
+        left join sys_dept b on a.parent_id = b.id
+        where a.is_del = 0
+        <if test="deptName != null and deptName!='' ">
+            and a.dept_name like "%"#{deptName}"%"
+        </if>
+    </select>
+    <select id="selectOne" resultMap="BaseResultMap">
+        SELECT a.*,b.dept_name parentName FROM sys_dept a
+        left join sys_dept b on a.parent_id = b.id
+        where a.id = #{id}
+    </select>
+
+</mapper>

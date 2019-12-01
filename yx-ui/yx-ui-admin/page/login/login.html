@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>登录--YX管理平台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/login.css" media="all"/>
+</head>
+<body>
+<!--
+<video class="video-player" preload="auto" autoplay="autoplay" loop="loop" data-height="1080" data-width="1920" height="1080" width="1920">
+    <source src="login.mp4" type="video/mp4">
+</video>
+-->
+<div class="video_mask"></div>
+<div class="login_tier"></div>
+<div class="login-lef">
+    <!--<img class="logo" src="../../images/header_logo.png" />-->
+    <!--<h3>yx-framework</h3>-->
+</div>
+<div class="login-main">
+    <div class="login">
+        <h1>YX管理平台登录</h1>
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <input class="layui-input" name="account" placeholder="用户名" lay-verify="required" type="text"
+                       autocomplete="off" value="">
+            </div>
+            <div class="layui-form-item">
+                <input class="layui-input" name="password" placeholder="密码" lay-verify="required" type="password"
+                       autocomplete="off" value="">
+            </div>
+            <div class="layui-form-item form_code">
+                <input class="layui-input" name="captchaValue" placeholder="验证码" lay-verify="required|code" type="text"
+                       autocomplete="off">
+                <div class="code">
+                    <img src="../../images/loading.gif" id="captchaImg" alt="点击刷新验证码" width="116" height="36"/>
+                </div>
+                <input type="hidden" name="captchaId" id="captchaId" value="0"/>
+            </div>
+            <button class="layui-btn login_btn" lay-submit="" lay-filter="login">登录</button>
+        </form>
+    </div>
+</div>
+<div class="login_footer">
+    <p>Copyright © 2019 yx-framework</p>
+</div>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="login.js"></script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.dao.mapper.AppPackageVersionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.sys.model.appVersion.AppPackageVersion">
+        <result column="id" property="id"/>
+        <result column="app_type" property="appType"/>
+        <result column="package_version" property="packageVersion"/>
+        <result column="package_url" property="packageUrl"/>
+        <result column="upgrade_mode" property="upgradeMode"/>
+        <result column="version_status" property="versionStatus"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="table_name" >
+        app_package_version
+    </sql>
+
+    <sql id="columns" >
+        id,
+        app_type,
+        package_version,
+        package_url,
+        upgrade_mode,
+        version_status,
+        create_by,
+        create_time,
+        update_by,
+        update_time
+    </sql>
+
+    <sql id="select_condition" >
+        <if test="id != null">and id = #{id}</if>
+        <if test="appType != null">and app_type = #{appType}</if>
+        <if test="packageVersion != null and packageVersion != ''">and package_version = #{packageVersion}</if>
+        <if test="packageUrl != null and packageUrl != ''">and package_url = #{packageUrl}</if>
+        <if test="upgradeMode != null">and upgrade_mode = #{upgradeMode}</if>
+        <if test="versionStatus != null">and version_status = #{versionStatus}</if>
+    </sql>
+
+    <insert id="insertSelective"  parameterType="com.yx.sys.model.appVersion.AppPackageVersion" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        <include refid="table_name"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="appType != null">app_type,</if>
+            <if test="packageVersion != null and packageVersion != ''">package_version,</if>
+            <if test="packageUrl != null and packageUrl != ''">package_url,</if>
+            <if test="upgradeMode != null">upgrade_mode,</if>
+            <if test="versionStatus != null">version_status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="appType != null">#{appType},</if>
+            <if test="packageVersion != null and packageVersion != ''">#{packageVersion},</if>
+            <if test="packageUrl != null and packageUrl != ''">#{packageUrl},</if>
+            <if test="upgradeMode != null">#{upgradeMode},</if>
+            <if test="versionStatus != null">#{versionStatus},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateStatusById">
+        update <include refid="table_name"/>
+        set version_status = #{versionStatus}
+        where id = #{versionId}
+    </update>
+
+    <delete id="deleteById">
+        delete from <include refid="table_name"/>
+        where id = #{versionId}
+    </delete>
+
+    <select id="getMaxVersionByAppTypeAndOnLine" resultType="java.lang.String">
+        select package_version
+        from <include refid="table_name"/>
+        where app_type = #{appType}
+          and version_status = 2
+        order by id desc
+        limit 1
+    </select>
+
+    <select id="getById" resultMap="BaseResultMap">
+        select *
+        from <include refid="table_name"/>
+        where id = #{versionId}
+    </select>
+
+    <select id="getMaxVersionIdByAppType" resultType="java.lang.Long">
+        select id
+        from <include refid="table_name"/>
+        where app_type = #{appType}
+        order by id desc
+        limit 1
+    </select>
+
+    <select id="getSecondMaxVersionByAppType" resultType="java.lang.String">
+        select package_version
+        from <include refid="table_name"/>
+        where app_type = #{appType}
+          and id != #{versionId}
+        order by id desc
+        limit 1
+    </select>
+
+    <select id="getMaxVersionInfoByAppType" resultMap="BaseResultMap">
+        select *
+        from <include refid="table_name"/>
+        where app_type = #{appType}
+          and version_status = 2
+        order by id desc
+        limit 1
+    </select>
+
+    <select id="getCountByAppTypeAndOutLine" resultType="java.lang.Integer">
+        select count(id)
+        from <include refid="table_name"/>
+        where app_type = #{appType}
+          and version_status = 1
+    </select>
+
+    <resultMap id="PageAppVersionModel" type="com.yx.sys.model.appVersion.PageAppVersionModel">
+        <result column="versionId" property="versionId"/>
+        <result column="appType" property="appType"/>
+        <result column="appTypeStr" property="appTypeStr"/>
+        <result column="packageVersion" property="packageVersion"/>
+        <result column="packageUrl" property="packageUrl"/>
+        <result column="upgradeMode" property="upgradeMode"/>
+        <result column="upgradeModeStr" property="upgradeModeStr"/>
+        <result column="versionStatus" property="versionStatus"/>
+        <result column="versionStatusStr" property="versionStatusStr"/>
+        <collection property="descList" javaType="ArrayList" column="versionId"
+                    ofType="java.lang.String" select="com.yx.sys.dao.mapper.AppPackageDescMapper.getDescsByVersionId"/>
+    </resultMap>
+
+    <select id="queryByPage" resultMap="PageAppVersionModel">
+        select
+          apv.id as versionId,
+          apv.app_type as appType,
+          case apv.app_type
+            when 1 then '安卓'
+            when 2 then 'IOS'
+          end as appTypeStr,
+          apv.package_version as packageVersion,
+          apv.package_url as packageUrl,
+          apv.upgrade_mode as upgradeMode,
+          case apv.upgrade_mode
+            when 1 then '强制'
+            when 2 then '提示'
+          end as upgradeModeStr,
+          apv.version_status as versionStatus,
+          case apv.version_status
+            when 1 then '未发布'
+            when 2 then '已发布'
+          end as versionStatusStr
+        from app_package_version apv
+          left join app_package_desc apd on apd.package_version_id = apv.id
+        where 1 = 1
+        <include refid="select_condition"/>
+        group by apv.id
+        order by apv.id desc
+    </select>
+
+    <select id="selectNewestByAppType" resultMap="BaseResultMap">
+        select *
+        from app_package_version
+        where app_type = #{appType}
+        and version_status = 2
+        order by id desc
+        limit 1
+    </select>
+
+
+</mapper>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>日志管理--YX管理平台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_495397_jzxo653foj6skyb9.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+</head>
+<body class="childrenBody">
+<blockquote class="layui-elem-quote news_search">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="" placeholder="用户名" class="layui-input userName">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">用户操作</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="" placeholder="用户操作" class="layui-input operation_">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">操作来源</label>
+                <div class="layui-input-inline" >
+                    <select name="source"  class="source">
+                        <option value="">请选择</option>
+                        <option value="1">PC</option>
+                        <option value="2">APP</option>
+                        <option value="3">微信</option>
+                        <option value="4">安卓</option>
+                        <option value="5">IOS</option>
+                        <option value="6">ADMIN</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <a class="layui-btn search_btn">查询</a>
+        </div>
+    </form>
+</blockquote>
+
+<table class="layui-table" id="logTable" lay-filter="logTable"></table>
+
+<!-- 分页控件div -->
+<div id="pageDiv"></div>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="logList.js"></script>
+<script type="text/html" id="operationTypeTpl">
+    {{#  if(d.operationType === 0){ }}
+    <div>{{"查询"}}</div>
+    {{#  } }}
+    {{#  if(d.operationType === 1){ }}
+    <div>{{"新增"}}</div>
+    {{#  } }}
+    {{#  if(d.operationType === 2){ }}
+    <div>{{"修改"}}</div>
+    {{#  } }}
+    {{#  if(d.operationType === 3){ }}
+    <div>{{"删除"}}</div>
+    {{#  } }}
+    {{#  if(d.operationType === 4){ }}
+    <div>{{"登录"}}</div>
+    {{#  } }}
+    {{#  if(d.operationType === 9){ }}
+    <div>{{"其他"}}</div>
+    {{#  } }}
+</script>
+<script type="text/html" id="sourceTpl">
+    {{#  if(d.source === 1){ }}
+    <div>{{"PC"}}</div>
+    {{#  } }}
+    {{#  if(d.source === 2){ }}
+    <div>{{"APP"}}</div>
+    {{#  } }}
+    {{#  if(d.source === 3){ }}
+    <div>{{"微信"}}</div>
+    {{#  } }}
+    {{#  if(d.source === 4){ }}
+    <div>{{"安卓"}}</div>
+    {{#  } }}
+    {{#  if(d.source === 5){ }}
+    <div>{{"IOS"}}</div>
+    {{#  } }}
+    {{#  if(d.source === 6){ }}
+    <div>{{"ADMIN"}}</div>
+    {{#  } }}
+</script>
+
+</body>
+</html>

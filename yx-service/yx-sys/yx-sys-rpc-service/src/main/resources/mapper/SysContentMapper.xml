@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.dao.mapper.SysContentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.sys.model.SysContent">
+        <result column="id" property="id" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="model_type" property="modelType" />
+        <result column="status" property="status" />
+        <result column="url" property="url" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="description" property="description" />
+        <result column="model_time" property="modelTime" />
+        <result column="keywords" property="keywords" />
+        <result column="model_type_types" property="modelTypeTypes" />
+        <result column="client_type" property="clientType" />
+    </resultMap>
+
+    <sql id="entityParams">
+        id,create_time,create_by,update_time,update_by,model_type,status,url,title,
+        description,model_time,keywords,model_type_types,client_type,content
+    </sql>
+
+    <select id="selectPage" resultMap="BaseResultMap">
+        select
+        id,create_time,create_by,update_time,update_by,model_type,status,url,title,
+        description,model_time,keywords,model_type_types,client_type
+        from sys_content
+        WHERE 1=1
+            <if test="sysContent.status != null ">
+                and status = #{sysContent.status}
+            </if>
+            <if test="sysContent.title != null and sysContent.title != ''">
+                and title like CONCAT(#{sysContent.title} ,'%')
+            </if>
+            <if test="sysContent.keywords != null and sysContent.keywords != ''">
+                and keywords like CONCAT(#{sysContent.keywords},'%')
+            </if>
+            <if test="sysContent.modelType != null ">
+                and model_type = #{sysContent.modelType}
+            </if>
+            <if test="sysContent.modelTypeTypes != null ">
+                and model_type_types = #{sysContent.modelTypeTypes}
+            </if>
+        order by id desc
+    </select>
+
+    <select id="selectVOPage" resultMap="BaseResultMap">
+        select
+          sc.*
+        from sys_content sc
+        WHERE 1=1
+        <if test="sysContent.status != null ">
+            and sc.status = #{sysContent.status}
+        </if>
+        <if test="sysContent.title != null and sysContent.title != ''">
+            and sc.title like CONCAT(#{sysContent.title} ,'%')
+        </if>
+        <if test="sysContent.keywords != null and sysContent.keywords != ''">
+            and sc.keywords like CONCAT(#{sysContent.keywords},'%')
+        </if>
+        <if test="sysContent.modelType != null ">
+            and sc.model_type = #{sysContent.modelType}
+        </if>
+        <if test="sysContent.modelTypeTypes != null ">
+            and model_type_types = #{sysContent.modelTypeTypes}
+        </if>
+        order by sc.id desc
+    </select>
+
+    <select id="selectOneData" resultType="com.yx.sys.model.SysContent">
+        select
+        <include refid="entityParams"/>
+        from sys_content
+        <where>
+            <if test="sysContent.status != null ">
+                and status = #{sysContent.status}
+            </if>
+            <if test="sysContent.modelTypeTypes != null ">
+                and model_type_types = #{sysContent.modelTypeTypes}
+            </if>
+            <if test="sysContent.clientType != null ">
+                and client_type = #{sysContent.clientType}
+            </if>
+            <if test="sysContent.modelType != null ">
+                and model_type = #{sysContent.modelType}
+            </if>
+        </where>
+        order by create_time desc limit 1
+    </select>
+
+    <select id="selectList" resultType="com.yx.sys.model.SysContent">
+        select
+        <include refid="entityParams"/>
+        from sys_content
+        <where>
+            <if test="content.status != null ">
+                and status = #{content.status}
+            </if>
+            <if test="content.title != null and content.title != ''">
+                and title like CONCAT(#{content.title} ,'%')
+            </if>
+            <if test="content.keywords != null and content.keywords != ''">
+                and keywords like CONCAT(#{content.keywords},'%')
+            </if>
+            <if test="content.modelType != null ">
+                and model_type = #{content.modelType}
+            </if>
+            <if test="content.modelTypeTypes != null ">
+                and model_type_types = #{content.modelTypeTypes}
+            </if>
+        </where>
+    </select>
+
+	<select id="selectDevelopingCourse" resultType="com.yx.sys.model.SysContent">
+        select
+            sc.id as id,
+            sc.title as title,
+            sc.content as content,
+            sc.description as description,
+            sc.model_time as modelTime
+        from sys_content sc
+        where status = 1 and model_type = 2
+        and date_format(sc.model_time,'%Y') = #{year}
+        order by sc.model_time desc
+    </select>
+
+    <select id="selectDevelopingCourseYear" resultType="com.yx.sys.model.vo.SysContentVO">
+        select
+            distinct date_format(sc.model_time,'%Y') as year
+        from sys_content sc
+        where status = 1 and model_type = 2 order by year desc
+    </select>
+
+</mapper>

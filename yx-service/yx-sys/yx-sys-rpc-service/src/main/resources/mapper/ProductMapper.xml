@@ -1,0 +1,941 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.dao.mapper.ProductMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.sys.model.product.Product">
+        <result column="id" property="id"/>
+        <result column="product_no" property="productNo"/>
+        <result column="title" property="title"/>
+        <result column="borrow_user_id" property="borrowUserId"/>
+        <result column="guarantee_id" property="guaranteeId"/>
+        <result column="asset_type" property="assetType"/>
+        <result column="use_type" property="useType"/>
+        <result column="use_type_remark" property="useTypeRemark"/>
+        <result column="is_activity" property="isActivity"/>
+        <result column="is_company" property="isCompany"/>
+        <result column="repurchase_mode" property="repurchaseMode"/>
+        <result column="is_transfer" property="isTransfer"/>
+        <result column="product_amount" property="productAmount"/>
+        <result column="product_deadline" property="productDeadline"/>
+        <result column="profit" property="profit"/>
+        <result column="service_fee" property="serviceFee"/>
+        <result column="stop_bid_amount" property="stopBidAmount"/>
+        <result column="stop_bid_time" property="stopBidTime"/>
+        <result column="bid_server_fee" property="bidServerFee"/>
+        <result column="time_count" property="timeCount"/>
+        <result column="min_bid_amount" property="minBidAmount"/>
+        <result column="max_bid_amount" property="maxBidAmount"/>
+        <result column="borrow_desc" property="borrowDesc"/>
+        <result column="guarantee_desc" property="guaranteeDesc"/>
+        <result column="risk_desc" property="riskDesc"/>
+        <result column="product_status" property="productStatus"/>
+        <result column="product_type" property="productType"/>
+        <result column="bid_amount" property="bidAmount"/>
+        <result column="root_product_id" property="rootProductId"/>
+        <result column="full_bid_date" property="fullBidDate"/>
+        <result column="channel_flow" property="channelFlow"/>
+        <result column="is_add_profit" property="isAddProfit"/>
+        <result column="add_profit_type" property="addProfitType"/>
+        <result column="add_profit" property="addProfit"/>
+        <result column="invest_begin_date" property="investBeginDate"/>
+        <result column="invest_end_date" property="investEndDate"/>
+        <result column="is_del" property="isDel"/>
+        <result column="product_rating" property="productRating"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="subject_no" property="subjectNo"/>
+        <result column="is_new_data" property="isNewData"/>
+        <result column="is_join_smart" property="isJoinSmart"/>
+        <result column="smart_bid_plan_id" property="smartBidPlanId"/>
+    </resultMap>
+
+    <resultMap id="VOResultMap" extends="BaseResultMap" type="com.yx.sys.model.vo.ProductVO">
+        <result column="borrowUserName" property="borrowUserName"/>
+        <result column="borrowUserRealName" property="borrowUserRealName"/>
+        <result column="borrowUserPhone" property="borrowUserPhone"/>
+        <result column="guaranteeName" property="guaranteeName"/>
+        <result column="firstCheckTime" property="firstCheckTime"/>
+        <result column="finalCheckTime" property="finalCheckTime"/>
+        <!-- 处理中的出借订单数量 -->
+        <result column="processBidOrderCount" property="processBidOrderCount"/>
+        <result column="smartName" property="smartName"/>
+    </resultMap>
+
+
+    <select id="getById" resultMap="BaseResultMap">
+        select
+            p.*
+        from product p
+        where
+            p.id = #{id}
+    </select>
+
+    <select id="selectVOById" resultMap="VOResultMap">
+        select
+            p.*,
+            u.user_name as borrowUserName,
+            u.real_name as borrowUserRealName,
+            u.phone as borrowUserPhone
+
+        from product p
+        LEFT  JOIN user_info u ON  u.id=p.borrow_user_id
+        where
+        p.id = #{id}
+    </select>
+
+    <select id="selectVOByProductNo" resultMap="VOResultMap">
+        select
+        p.*
+        from product p
+        where
+        p.product_no = #{productNo}
+    </select>
+
+    <select id="getVOById" resultMap="VOResultMap">
+        select
+        p.*
+        from product p
+        where
+        p.id = #{id}
+    </select>
+
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT
+        p.*
+        FROM product p
+        WHERE 1=1
+
+        <!-- 查询条件根据实际的需要去加减 -->
+        <if test="product.isDel!=null">
+            AND p.is_del=#{product.isDel}
+        </if>
+        <if test="product.title!=null and product.title!='' ">
+            AND p.title=#{product.title}
+        </if>
+
+        ORDER BY p.id DESC
+    </select>
+
+    <select id="selectVOPage" resultMap="VOResultMap">
+        SELECT
+        p.*,
+        u.real_name as borrowUserRealName,
+        u.phone as borrowUserPhone,
+        pc.create_time as firstCheckTime,
+        pc.update_time as finalCheckTime
+
+        FROM product p
+        LEFT JOIN user_info u ON  u.id=p.borrow_user_id
+        LEFT JOIN product_check pc ON pc.product_id=p.id
+
+        WHERE 1=1
+        <if test="productVO.isDel!=null">
+            AND  p.is_del=#{productVO.isDel}
+        </if>
+        <if test="productVO.productStatusList!=null and productVO.productStatusList.size()>0 ">
+            AND  p.product_status in
+            <foreach collection="productVO.productStatusList" open="(" separator="," close=")" item="item">
+                #{item}
+            </foreach>
+        </if>
+        <if test="productVO.title!=null and productVO.title!='' ">
+            AND p.title=#{productVO.title}
+        </if>
+        <if test="productVO.productStatus!=null ">
+            AND  p.product_status=#{productVO.productStatus}
+        </if>
+        <if test="productVO.productType!=null ">
+            AND  p.product_type=#{productVO.productType}
+        </if>
+        <if test="productVO.assetType!=null">
+            AND p.asset_type=#{productVO.assetType}
+        </if>
+        <if test="productVO.repurchaseMode!=null ">
+            AND  p.repurchase_mode=#{productVO.repurchaseMode}
+        </if>
+        <if test="productVO.borrowUserPhone!=null">
+            AND u.phone=#{productVO.borrowUserPhone}
+        </if>
+        <if test="productVO.borrowUserName!=null and productVO.borrowUserName!='' ">
+            AND u.real_name=#{productVO.borrowUserName}
+        </if>
+        <if test="productVO.createTimeStart!=null ">
+            AND p.create_time &gt;= #{productVO.createTimeStart}
+        </if>
+        <if test="productVO.createTimeEnd!=null ">
+            AND p.create_time &lt;= #{productVO.createTimeEnd}
+        </if>
+
+
+        ORDER BY p.id DESC
+    </select>
+
+    <select id="selectBidingVOPage" resultMap="VOResultMap">
+        SELECT
+        p.*,
+        u.real_name as borrowUserName,
+        u.phone as borrowUserPhone,
+        pc.create_time as firstCheckTime,
+        pc.update_time as finalCheckTime
+
+        FROM product p
+        LEFT JOIN user_info u ON  u.id=p.borrow_user_id
+        LEFT JOIN product_check pc ON pc.product_id=p.id
+
+        WHERE 1=1
+        AND p.product_status=7
+        <if test="productVO.isDel!=null">
+            AND  p.is_del=#{productVO.isDel}
+        </if>
+        <if test="productVO.productStatusList!=null and productVO.productStatusList.size()>0 ">
+            AND  p.product_status in
+            <foreach collection="productVO.productStatusList" open="(" separator="," close=")" item="item">
+                #{item}
+            </foreach>
+        </if>
+        <if test="productVO.title!=null and productVO.title!='' ">
+            AND p.title=#{productVO.title}
+        </if>
+        <!--<if test="productVO.productStatus!=null ">-->
+        <!--AND  p.product_status=#{productVO.productStatus}-->
+        <!--</if>-->
+        <if test="productVO.productType!=null ">
+            AND  p.product_type=#{productVO.productType}
+        </if>
+        <if test="productVO.assetType!=null">
+            AND p.asset_type=#{productVO.assetType}
+        </if>
+        <if test="productVO.repurchaseMode!=null ">
+            AND  p.repurchase_mode=#{productVO.repurchaseMode}
+        </if>
+        <if test="productVO.borrowUserPhone!=null">
+            AND u.phone=#{productVO.borrowUserPhone}
+        </if>
+        <if test="productVO.borrowUserName!=null and productVO.borrowUserName!='' ">
+            AND u.real_name=#{productVO.borrowUserName}
+        </if>
+        <if test="productVO.createTimeStart!=null ">
+            AND p.create_time &gt;= #{productVO.createTimeStart}
+        </if>
+        <if test="productVO.createTimeEnd!=null ">
+            AND p.create_time &lt;= #{productVO.createTimeEnd}
+        </if>
+
+
+        ORDER BY p.invest_begin_date DESC
+    </select>
+
+
+    <select id="selectBidPage" resultMap="VOResultMap">
+        SELECT
+        p.*,
+        u.real_name as borrowUserName,
+        u.phone as borrowUserPhone,
+        pc.create_time as firstCheckTime,
+        pc.update_time as finalCheckTime,
+        CASE p.product_status
+        WHEN 7  THEN 1
+        WHEN 10 THEN 2
+        ELSE 3 END  as sort
+
+
+
+
+        FROM product p
+        LEFT JOIN user_info u ON  u.id=p.borrow_user_id
+        LEFT JOIN product_check pc ON pc.product_id=p.id
+
+        WHERE 1=1
+        <if test="productVO.isDel!=null">
+            AND p.is_del=#{productVO.isDel}
+        </if>
+        <if test="productVO.productStatusList!=null and productVO.productStatusList.size()>0 ">
+            AND  p.product_status in
+            <foreach collection="productVO.productStatusList" open="(" separator="," close=")" item="item">
+                #{item}
+            </foreach>
+        </if>
+        <if test="productVO.title!=null and productVO.title!='' ">
+            AND p.title=#{productVO.title}
+        </if>
+        <if test="productVO.productStatus!=null ">
+            AND  p.product_status=#{productVO.productStatus}
+        </if>
+        <if test="productVO.productType!=null ">
+            AND  p.product_type=#{productVO.productType}
+        </if>
+        <if test="productVO.assetType!=null">
+            AND p.asset_type=#{productVO.assetType}
+        </if>
+        <if test="productVO.repurchaseMode!=null">
+            AND p.repurchase_mode=#{productVO.repurchaseMode}
+        </if>
+        <if test="productVO.borrowUserPhone!=null">
+            AND u.phone=#{productVO.borrowUserPhone}
+        </if>
+        <if test="productVO.borrowUserName!=null and productVO.borrowUserName!='' ">
+            AND u.real_name=#{productVO.borrowUserName}
+        </if>
+        <if test="productVO.createTimeStart!=null ">
+            AND p.create_time &gt;= #{productVO.createTimeStart}
+        </if>
+        <if test="productVO.createTimeEnd!=null ">
+            AND p.create_time &lt;= #{productVO.createTimeEnd}
+        </if>
+        <!-- pc端查询条件start -->
+        <if test="productVO.productAmountStart!=null">
+            AND p.product_amount &gt;= #{productVO.productAmountStart}
+        </if>
+        <if test="productVO.productAmountEnd!=null">
+            AND p.product_amount &lt; #{productVO.productAmountEnd}
+        </if>
+        <if test="productVO.productDeadlineStart!=null">
+            AND p.repurchase_mode!=3
+            AND p.product_deadline &gt;= #{productVO.productDeadlineStart}
+        </if>
+        <if test="productVO.productDeadlineEnd!=null">
+            AND p.repurchase_mode!=3
+            AND p.product_deadline &lt; #{productVO.productDeadlineEnd}
+        </if>
+        <if test="productVO.profitStart!=null">
+            AND p.profit &gt;= #{productVO.profitStart}
+        </if>
+        <if test="productVO.profitEnd!=null">
+            AND p.profit &lt; #{productVO.profitEnd}
+        </if>
+        <!-- pc端查询条件end -->
+
+
+        ORDER BY sort ASC ,p.invest_begin_date DESC
+    </select>
+
+
+    <select id="selectTransferPage" resultMap="VOResultMap">
+        SELECT
+        p.*,
+        u.real_name as borrowUserName,
+        u.phone as borrowUserPhone,
+        CASE p.product_status
+        WHEN 7  THEN 1
+        WHEN 10 THEN 2
+        ELSE 3 END  as sort
+
+
+
+
+        FROM product p
+        LEFT JOIN user_info u ON  u.id=p.borrow_user_id
+        LEFT JOIN receipt_transfer rt ON rt.new_product_id=p.id
+
+
+        WHERE rt.type in (1,2)
+
+        <if test="productVO.isDel!=null">
+            AND p.is_del=#{productVO.isDel}
+        </if>
+        <if test="productVO.productStatusList!=null and productVO.productStatusList.size()>0 ">
+            AND  p.product_status in
+            <foreach collection="productVO.productStatusList" open="(" separator="," close=")" item="item">
+                #{item}
+            </foreach>
+        </if>
+        <if test="productVO.title!=null and productVO.title!='' ">
+            AND p.title=#{productVO.title}
+        </if>
+        <if test="productVO.productStatus!=null ">
+            AND  p.product_status=#{productVO.productStatus}
+        </if>
+        <if test="productVO.productType!=null ">
+            AND  p.product_type=#{productVO.productType}
+        </if>
+        <if test="productVO.assetType!=null">
+            AND p.asset_type=#{productVO.assetType}
+        </if>
+        <if test="productVO.repurchaseMode!=null">
+            AND p.repurchase_mode=#{productVO.repurchaseMode}
+        </if>
+        <if test="productVO.borrowUserPhone!=null">
+            AND u.phone=#{productVO.borrowUserPhone}
+        </if>
+        <if test="productVO.borrowUserName!=null and productVO.borrowUserName!='' ">
+            AND u.real_name=#{productVO.borrowUserName}
+        </if>
+        <if test="productVO.createTimeStart!=null ">
+            AND p.create_time &gt;= #{productVO.createTimeStart}
+        </if>
+        <if test="productVO.createTimeEnd!=null ">
+            AND p.create_time &lt;= #{productVO.createTimeEnd}
+        </if>
+        <!-- pc端查询条件start -->
+        <if test="productVO.productAmountStart!=null">
+            AND p.product_amount &gt;= #{productVO.productAmountStart}
+        </if>
+        <if test="productVO.productAmountEnd!=null">
+            AND p.product_amount &lt; #{productVO.productAmountEnd}
+        </if>
+        <if test="productVO.productDeadlineStart!=null">
+            AND p.repurchase_mode!=3
+            AND p.product_deadline &gt;= #{productVO.productDeadlineStart}
+        </if>
+        <if test="productVO.productDeadlineEnd!=null">
+            AND p.repurchase_mode!=3
+            AND p.product_deadline &lt; #{productVO.productDeadlineEnd}
+        </if>
+        <if test="productVO.profitStart!=null">
+            AND p.profit &gt;= #{productVO.profitStart}
+        </if>
+        <if test="productVO.profitEnd!=null">
+            AND p.profit &lt; #{productVO.profitEnd}
+        </if>
+        <!-- pc端查询条件end -->
+
+
+        ORDER BY sort ASC ,p.invest_begin_date DESC
+    </select>
+
+
+
+    <select id="selectVOList" resultMap="VOResultMap">
+        SELECT
+        p.*,
+        u.real_name as borrowUserName,
+        u.phone as borrowUserPhone
+
+        FROM product p
+        LEFT JOIN user_info u ON  u.id=p.borrow_user_id
+        WHERE 1=1
+        <if test="productVO.isDel!=null">
+            AND p.is_del=#{productVO.isDel}
+        </if>
+        <if test="productVO.productStatusList!=null and productVO.productStatusList.size()>0 ">
+            AND  p.product_status in
+            <foreach collection="productVO.productStatusList" open="(" separator="," close=")" item="item">
+                #{item}
+            </foreach>
+        </if>
+        <if test="productVO.title!=null and productVO.title!='' ">
+            AND p.title like concat(#{productVO.title},'%')
+        </if>
+        <if test="productVO.productType!=null ">
+            AND  p.product_type=#{productVO.productType}
+        </if>
+        <if test="productVO.productStatus!=null ">
+            AND  p.product_status=#{productVO.productStatus}
+        </if>
+        <if test="productVO.assetType!=null">
+            AND p.asset_type=#{productVO.assetType}
+        </if>
+        <if test="productVO.borrowUserPhone!=null">
+            AND u.phone=#{productVO.borrowUserPhone}
+        </if>
+        <if test="productVO.borrowUserName!=null and productVO.borrowUserName!='' ">
+            AND u.real_name=#{productVO.borrowUserName}
+        </if>
+        <if test="productVO.createTimeStart!=null ">
+            AND p.create_time &gt;= #{productVO.createTimeStart}
+        </if>
+        <if test="productVO.createTimeEnd!=null ">
+            AND p.create_time &lt;= #{productVO.createTimeEnd}
+        </if>
+
+
+        ORDER BY p.id DESC
+    </select>
+
+    <select id="selectByIds" resultMap="BaseResultMap">
+        select
+        p.*
+        from product p
+        where
+        p.id in
+        <foreach collection="ids" open="(" separator="," close=")" item="item">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getByIds" resultMap="BaseResultMap">
+        select
+        p.*
+        from product p
+        where
+        p.id in
+        <foreach collection="ids" open="(" separator="," close=")" item="item">
+            #{item}
+        </foreach>
+    </select>
+
+
+    <update id="updateStatusAndBidAmountById">
+        update
+        product
+        set bid_amount = #{bidAmount}
+        , product_status = #{status}
+        <if test="status == 14">
+            , full_bid_date = CURRENT_TIMESTAMP
+        </if>
+        where id = #{id}
+    </update>
+
+    <update id="updateStatusById">
+        update
+            product
+        set
+            product_status = #{status}
+        where
+            id = #{id}
+    </update>
+
+    <update id="updateStatusByRootProductId">
+        update
+            product
+        set
+            product_status = #{status}
+        where
+            product_type=1
+            AND  root_product_id = #{rootProductId}
+
+    </update>
+
+
+    <select id="selectByStatusList" resultMap="BaseResultMap">
+        select
+        *
+        from product
+        where 1=1
+        AND is_del=0
+        AND product_status in
+        <foreach collection="statusList" open="(" separator="," close=")" item="item">
+            #{item}
+        </foreach>
+    </select>
+
+
+    <select id="selectIndexNewUserProduct" resultMap="VOResultMap">
+         SELECT
+            p.*
+        FROM
+            product p
+        WHERE  1=1
+        AND p.is_del=0
+        AND p.asset_type=8
+        AND p.product_status  in (7,10,11,12)
+        ORDER BY p.product_status ASC,p.id DESC ,p.index_show DESC
+        limit 1
+
+    </select>
+
+    <select id="selectIndexProduct" resultMap="VOResultMap">
+        SELECT
+            p.*,
+			CASE
+               WHEN p.product_status=7  AND p.product_type!=1 THEN 1
+               WHEN p.product_status=7  AND p.product_type =1 THEN 2
+               WHEN p.product_status=10 AND p.product_type!=1 THEN 3
+               WHEN p.product_status=10 AND p.product_type =1 THEN 4
+               WHEN p.product_status=11 AND p.product_type!=1 THEN 5
+               WHEN p.product_status=11 AND p.product_type =1 THEN 6
+			   WHEN p.product_status=12 AND p.product_type!=1 THEN 7
+               WHEN p.product_status=12 AND p.product_type =1 THEN 8
+			END as sort
+
+        FROM
+            product p
+        WHERE  1=1
+        AND p.is_del=0
+        AND p.asset_type!=8
+        AND p.product_status in (7,10,11,12)
+        ORDER BY sort ASC,p.index_show DESC ,p.id ASC
+        limit 2
+
+    </select>
+
+
+    <select id="selectIndexProductForPCByAssetType" resultMap="VOResultMap">
+
+        SELECT
+            p.*,
+			CASE
+               WHEN p.product_status=7  AND p.product_type!=1 THEN 1
+               WHEN p.product_status=7  AND p.product_type =1 THEN 2
+               WHEN p.product_status=10 AND p.product_type!=1 THEN 3
+               WHEN p.product_status=10 AND p.product_type =1 THEN 4
+               WHEN p.product_status=11 AND p.product_type!=1 THEN 5
+               WHEN p.product_status=11 AND p.product_type =1 THEN 6
+			   WHEN p.product_status=12 AND p.product_type!=1 THEN 7
+               WHEN p.product_status=12 AND p.product_type =1 THEN 8
+			END as sort
+
+        FROM
+            product p
+        WHERE  1=1
+        AND p.is_del=0
+        AND p.asset_type=#{assetType}
+        AND p.product_type = 2
+        AND p.product_status in (7,10,11,12)
+        ORDER BY sort ASC,p.index_show DESC ,p.id DESC
+
+        limit 1
+    </select>
+
+    <select id="selectExpList" resultType="com.yx.sys.model.export.ProductExp">
+        SELECT
+        p.product_no as productNo,
+        p.title as title,
+        CASE p.asset_type
+        WHEN 3 THEN '安享系列'
+        WHEN 4 THEN '私享系列'
+        WHEN 5 THEN '尊享系列'
+        WHEN 6 THEN '福享系列'
+        WHEN 8 THEN '新手福利'
+        WHEN 10 THEN '净值标'
+        ELSE '' END  as assetTypeName,
+        CASE p.use_type
+        WHEN 1 THEN '个人消费'
+        WHEN 2 THEN '短期周转'
+        WHEN 3 THEN '企业资金周转'
+        WHEN 4 THEN  p.use_type_remark
+        WHEN 5 THEN '赎楼'
+        WHEN 6 THEN '企业过桥'
+        WHEN 7 THEN '购车'
+        WHEN 8 THEN '装修'
+        WHEN 9 THEN '教育培训'
+        WHEN 10 THEN '个人旅游'
+        WHEN 11 THEN '企业经营'
+        WHEN 12 THEN '日常消费'
+        ELSE '' END  as useTypeName,
+        CASE p.is_activity
+        WHEN 1 THEN '是'
+        ELSE '否' END as isActivityStr,
+        CASE p.is_company
+        WHEN 1 THEN '是'
+        ELSE '否' END as isCompanyStr,
+        <include refid="RepayMode"/>  as repurchaseModeName,
+        CASE p.is_transfer
+        WHEN 1 THEN '是'
+        ELSE '否' END as isTransferStr,
+        p.product_amount as productAmount,
+        p.product_deadline as productDeadline,
+        p.profit as profit,
+        p.service_fee as serviceFee,
+        p.stop_bid_amount as stopBidAmount,
+        p.stop_bid_time as stopBidTime,
+        p.bid_server_fee as bidServerFee,
+        p.time_count as timeCount,
+        p.min_bid_amount as minBidAmount,
+        p.max_bid_amount as maxBidAmount,
+        p.borrow_desc as borrowDesc,
+        p.guarantee_desc as guaranteeDesc,
+        p.risk_desc as riskDesc,
+        <include refid="ProductStatus"/> as productStatusName,
+        CASE p.product_type
+        WHEN 1 THEN '债权'
+        WHEN 2 THEN '借款'
+        WHEN 3 THEN '商业保理'
+        WHEN 4 THEN '融资租赁'
+        ELSE '' END  as productTypeName,
+        p.bid_amount as bidAmount,
+        p.invest_begin_date as investBeginDate,
+        p.invest_end_date as investEndDate,
+        p.full_bid_date as fullBidDate,
+        p.add_profit as addProfit,
+
+        u.real_name as borrowUserName,
+        u.phone as borrowUserPhone
+
+        FROM product p
+        LEFT JOIN user_info u ON  u.id=p.borrow_user_id
+        WHERE 1=1
+        AND p.is_del=0
+        <if test="productVO.productStatusList!=null and productVO.productStatusList.size()>0 ">
+            AND  p.product_status in
+            <foreach collection="productVO.productStatusList" open="(" separator="," close=")" item="item">
+                #{item}
+            </foreach>
+        </if>
+        <if test="productVO.title!=null and productVO.title!='' ">
+            AND p.title=#{productVO.title}
+        </if>
+        <if test="productVO.productStatus!=null ">
+            AND  p.product_status=#{productVO.productStatus}
+        </if>
+        <if test="productVO.assetType!=null">
+            AND p.asset_type=#{productVO.assetType}
+        </if>
+        <if test="productVO.borrowUserPhone!=null">
+            AND u.phone=#{productVO.borrowUserPhone}
+        </if>
+        <if test="productVO.borrowUserName!=null and productVO.borrowUserName!='' ">
+            AND u.real_name=#{productVO.borrowUserName}
+        </if>
+        <if test="productVO.createTimeStart!=null ">
+            AND p.create_time &gt;= #{productVO.createTimeStart}
+        </if>
+        <if test="productVO.createTimeEnd!=null ">
+            AND p.create_time &lt;= #{productVO.createTimeEnd}
+        </if>
+
+
+        ORDER BY p.id DESC
+    </select>
+
+    <sql id="RepayMode">
+         case p.repurchase_mode
+          when 1
+            then '等额本息'
+          when 2
+            then '先息后本'
+          when 3
+            then '到期还本息'
+          else '' end
+    </sql>
+
+    <sql id="AssetType">
+        case p.asset_type
+          when 3
+          then '安'
+          when 4
+          then '私'
+          when 5
+          then '尊'
+          when 6
+          then '福'
+          when 8
+          then '新'
+          when 10
+          then '净'
+        end
+    </sql>
+
+    <sql id="ProductStatus">
+        case p.product_status
+          when 2
+            then '初审'
+          when 3
+            then '终审'
+          when 4
+            then '初审拒绝'
+          when 5
+            then '终审拒绝'
+          when 6
+            then '招标失败'
+          when 7
+            then '招标中'
+          when 8
+            then '已撤销'
+          when 9
+            then '流标'
+          when 10
+            then '还款中'
+          when 11
+            then '已还清'
+          when 12
+            then '逾期'
+          when 14
+            then '满标'
+          when 20
+            then '放款中'
+          when 21
+            then '放款失败'
+          when 22
+            then '流标处理中'
+          else '' end
+    </sql>
+
+    <sql id="DeadLine">
+        case p.repurchase_mode
+          when 1
+            then p.product_deadline * 30
+          when 2
+            then p.product_deadline * 30
+          when 3
+            then p.product_deadline
+          else 0 end
+    </sql>
+
+    <sql id="LeftJoinAmountComposition">
+        left join repayment_plan_amount rpa1 on rp.id = rpa1.repayment_plan_id and rpa1.amount_type = 1 and rpa1.amount_status = 1<!-- 本金 -->
+        left join repayment_plan_amount rpa2 on rp.id = rpa2.repayment_plan_id and rpa2.amount_type = 2 and rpa2.amount_status = 1<!-- 利息 -->
+        left join repayment_plan_amount rpa3 on rp.id = rpa3.repayment_plan_id and rpa3.amount_type = 3 and rpa3.amount_status = 1<!-- 逾期罚息 -->
+        left join repayment_plan_amount rpa4 on rp.id = rpa4.repayment_plan_id and rpa4.amount_type = 4 and rpa4.amount_status = 1<!-- 手续费 -->
+        left join repayment_plan_amount rpa5 on rp.id = rpa5.repayment_plan_id and rpa5.amount_type = 5 and rpa5.amount_status = 1<!-- 提前还款违约金-利息 -->
+        left join repayment_plan_amount rpa6 on rp.id = rpa6.repayment_plan_id and rpa6.amount_type = 6 and rpa6.amount_status = 1<!-- 提前还款利息 -->
+        left join repayment_plan_amount rpa7 on rp.id = rpa7.repayment_plan_id and rpa7.amount_type = 7 and rpa7.amount_status = 1<!-- 加息 -->
+        left join repayment_plan_amount rpa8 on rp.id = rpa8.repayment_plan_id and rpa8.amount_type = 8 and rpa8.amount_status = 1<!-- 提前还款加息 -->
+        left join repayment_plan_amount rpa9 on rp.id = rpa9.repayment_plan_id and rpa9.amount_type = 9 and rpa9.amount_status = 1<!-- 提前还款罚息 -->
+        left join repayment_plan_amount rpa10 on rp.id = rpa10.repayment_plan_id and rpa10.amount_type = 10 and rpa10.amount_status = 1<!-- 提前还款违约金-加息 -->
+    </sql>
+
+
+    <select id="selectListForFlowProduct" resultMap="BaseResultMap">
+        select
+        p.*
+        from product p
+        where 1=1
+        AND p.product_status=7
+        AND p.invest_end_date &lt; now()
+        ORDER BY  p.id
+    </select>
+
+
+    <select id="selectForLoan" resultType="java.lang.Long">
+        select
+        id
+        from product
+        where product_status in (14, 20, 21)
+        and auto_loan = 1
+    </select>
+
+    <select id="getTotalSuccessAmount" resultType="java.math.BigDecimal">
+        select
+        ifnull(sum(p.bid_amount), 0)
+        from product p
+        where p.product_status in (10, 11, 12)
+        and p.product_type = 2
+    </select>
+
+
+    <select id="getIdsByStatus" resultType="java.lang.Long">
+        select id
+        from product
+        where product_status = #{status}
+    </select>
+
+    <select id="getGuaranteeCountByGuaranteeUserId" resultType="java.lang.Integer">
+        select
+        count(p.id)
+        from guarantee_info gi
+        left join product p on gi.id = p.guarantee_id
+        and p.product_status not in (4, 5, 6, 8, 9, 11)
+        where gi.user_id = #{guaranteeUserId}
+    </select>
+
+    <select id="selectByTitle" resultMap="BaseResultMap">
+        SELECT
+        p.*
+        FROM  product p
+        WHERE  p.title=#{title}
+        limit 1
+
+    </select>
+
+    <select id="selectPromotionProduct" resultType="com.yx.sys.model.vo.ProductVO">
+        SELECT
+        pro.asset_type as assetType,
+        FORMAT(pro.profit,0) as profitStr,
+        case pro.repurchase_mode
+        when 1
+        then CONCAT(pro.product_deadline*30,'天')
+        when 2
+        then CONCAT(pro.product_deadline*30,'天')
+        when 3
+        then CONCAT(pro.product_deadline,'天')
+        ELSE '' END  as productDeadlineStr,
+        CONCAT(FORMAT(pro.min_bid_amount,0),'元起投') as minBidAmountStr
+        FROM
+        product pro
+        WHERE
+        pro.product_type != 1
+        AND pro.product_status = 7
+        ORDER BY
+        pro.invest_begin_date DESC
+        LIMIT 2
+    </select>
+
+
+    <select id="selectByRootProductId" resultMap="BaseResultMap">
+        SELECT
+        p.*
+
+        FROM product p
+        WHERE  p.root_product_id=#{rootProductId}
+        <if test="productType!=null">
+            AND  p.product_type=#{productType}
+        </if>
+        <if test="productStatus!=null">
+            AND p.product_status=#{productStatus}
+        </if>
+
+    </select>
+
+    <select id="getUnOverCountByUserId" resultType="java.lang.Integer">
+        select
+        count(id)
+        from product
+        where borrow_user_id = #{userId}
+        and product_status in (2, 3, 7, 10, 12, 14, 20, 21, 22)
+    </select>
+
+
+    <select id="selectCountByUserIdAndProductId" resultType="java.lang.Integer">
+        select count(id)
+        from product
+        where id = #{productId}
+        and borrow_user_id = #{borrowUserId}
+
+    </select>
+
+    <select id="selectCountByUserIdAndProductStatus" resultType="java.lang.Integer">
+        select count(id)
+        from product
+        where product_status = #{productStatus}
+        and borrow_user_id = #{borrowUserId}
+
+    </select>
+
+    <select id="selectCountByUserIdAndNotProductStatus" resultType="java.lang.Integer">
+        select count(id)
+        from product
+        where product_status != #{productStatus}
+        and borrow_user_id = #{borrowUserId}
+
+    </select>
+
+    <select id="selectTitleById" resultType="java.lang.String">
+        SELECT
+            title
+        FROM
+            product
+        WHERE
+            id = #{productId}
+    </select>
+
+    <select id="selectFullproduct" resultType="java.lang.Long">
+        SELECT
+            pr.id
+        FROM
+            product pr
+        LEFT JOIN receipt_plan rp ON pr.id = rp.product_id
+        WHERE
+            pr.product_type = 2
+        AND pr.product_status = 14
+        and rp.id is  NULL
+        GROUP BY pr.id
+    </select>
+
+    <select id="getCountsByProductIdsAndStatusList" resultType="java.lang.Integer">
+        select ifnull(count(id), 0)
+        from product
+        where product_status in
+        <foreach collection="productStatusList" open="(" separator="," close=")" item="item">
+            #{item}
+        </foreach>
+        and id in
+        <foreach collection="productIds" open="(" separator="," close=")" item="item">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getIdsByProductIdsAndStatus" resultType="java.lang.Long">
+        select id
+        from product
+        where product_status = #{productStatus}
+        and id in
+        <foreach collection="productIds" open="(" separator="," close=")" item="item">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

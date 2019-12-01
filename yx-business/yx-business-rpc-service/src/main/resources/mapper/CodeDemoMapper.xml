@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.business.dao.mapper.CodeDemoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.business.model.CodeDemo">
+        <result column="id" property="id" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="sys_user_id" property="sysUserId" />
+        <result column="name" property="name" />
+    </resultMap>
+
+    <resultMap id="VOResultMap" extends="BaseResultMap" type="com.yx.business.model.vo.CodeDemoVO">
+        <result column="userName" property="userName" />
+        <result column="phone" property="phone" />
+
+    </resultMap>
+
+    <select id="getById" resultMap="BaseResultMap">
+        SELECT
+            c.*
+        FROM  code_demo c
+        WHERE
+            c.id=#{id}
+    </select>
+
+    <select id="getVOById" resultMap="VOResultMap">
+        SELECT
+            c.*,
+            s.user_name as userName,
+            s.phone_ as phone
+        FROM  code_demo c
+        LEFT  JOIN  sys_user s ON  s.id=c.sys_user_id
+        WHERE
+            c.id=#{id}
+    </select>
+
+    <select id="selectPage"  resultMap="BaseResultMap">
+         SELECT
+             c.*
+         FROM  code_demo c
+         WHERE  1=1
+             <!-- 查询条件根据实际的需要去加减 -->
+             <if test="codeDemo.name!=null and codeDemo.name!='' ">
+                 AND c.name=#{codeDemo.name}
+             </if>
+             <if test="codeDemo.sysUserId!=null">
+                 AND c.sys_user_id=#{codeDemo.sysUserId}
+             </if>
+
+        ORDER BY  c.id DESC
+    </select>
+
+    <select id="selectVOPage"  resultMap="VOResultMap">
+        SELECT
+            c.*,
+            s.user_name as userName,
+            s.phone_ as phone
+        FROM  code_demo c
+        LEFT  JOIN  sys_user s ON  s.id=c.sys_user_id
+        WHERE  1=1
+            <!-- 查询条件根据实际的需要去加减 -->
+            <if test="codeDemoVO.name!=null and codeDemoVO.name!='' ">
+                AND c.name=#{codeDemoVO.name}
+            </if>
+            <if test="codeDemoVO.sysUserId!=null">
+                AND c.sys_user_id=#{codeDemoVO.sysUserId}
+            </if>
+
+        ORDER  BY  c.id DESC
+    </select>
+
+
+
+    <select id="selectCountByTitle" resultType="java.lang.Integer">
+        SELECT
+        count(p.title)
+        FROM cg_product p
+        WHERE  p.title= #{title}
+        AND p.product_status>5
+        ORDER BY p.created_date
+    </select>
+
+    <update id="updateProductTitle">
+        UPDATE cg_product
+        SET title=#{data.title}
+        WHERE  id=#{data.productNo}
+
+    </update>
+
+
+</mapper>

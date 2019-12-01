@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>字典管理--YX管理平台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_495397_jzxo653foj6skyb9.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+</head>
+<body class="childrenBody">
+<blockquote class="layui-elem-quote">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">字典名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="" placeholder="字典名称" class="layui-input code_text">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">字典类型</label>
+                <div class="layui-input-inline">
+                    <input type="text" value=""  placeholder="字典类型" class="layui-input type_">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <a class="layui-btn search_btn" clickPassValue="1">查询</a>
+        </div>
+        <permission value="sys:dic:add">
+        <div class="layui-inline">
+            <a class="layui-btn layui-btn-normal addBtn">添加字典</a>
+        </div>
+        </permission>
+        <permission value="sys:dic:delete">
+        <div class="layui-inline">
+            <a class="layui-btn layui-btn-danger batchDel">批量删除</a>
+        </div>
+        </permission>
+    </form>
+</blockquote>
+
+<table class="layui-table" id="dicTable" lay-filter="tableFilter"></table>
+
+<!-- 分页控件div -->
+<div id="pageDiv"></div>
+<!-- 工具栏模板 -->
+<div style="display: none;" id="toolBar">
+    <permission value="sys:dic:read">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    </permission>
+    <permission value="sys:dic:update">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    </permission>
+    <permission value="sys:dic:delete">
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </permission>
+</div>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="dicList.js"></script>
+
+</body>
+</html>

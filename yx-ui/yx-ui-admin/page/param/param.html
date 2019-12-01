@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>参数添加</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+    <style type="text/css">
+        .layui-form-item .layui-inline {
+            width: 33.333%;
+            float: left;
+            margin-right: 0;
+        }
+
+        @media (max-width: 1240px) {
+            .layui-form-item .layui-inline {
+                width: 100%;
+                float: none;
+            }
+        }
+    </style>
+</head>
+<body class="childrenBody">
+<form class="layui-form" style="width:80%;" id="paramForm">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">参&nbsp;&nbsp;数&nbsp;&nbsp;名</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" name="paramKey" id="paramKey" placeholder="请输入参数名"
+                       lay-verify="required">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">参&nbsp;&nbsp;数&nbsp;&nbsp;值</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" name="paramValue" id="paramValue" placeholder="请输入关键字"
+                       lay-verify="required">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" name="remark" id="remark" placeholder="请输入备注信息">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">启用状态</label>
+            <div class="layui-input-block ">
+                <input type="radio" name="enable" value="1" title="启用" checked>
+                <input type="radio" name="enable" value="0" title="禁用">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <permission value="sys:param:update">
+                <button class="layui-btn" lay-submit lay-filter="addFilter">立即提交</button>
+            </permission>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+    <input type="hidden" name="id" id="id"/>
+</form>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="param.js"></script>
+</body>
+</html>

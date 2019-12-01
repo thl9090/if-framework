@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>流标理由</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <style type="text/css">
+        .getSmsCode {display: inline-block;margin-top: 5px;}
+        .smsTime {display: none;padding: 5px 7px;border: 1px solid #e6e6e6;font-size: 14px;
+            color: #767676;margin-top: 4px;}
+    </style>
+</head>
+<body class="childrenBody">
+<form class="layui-form" style="width:80%;" id="userForm">
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">是否重发</label>
+            <div class="layui-input-block ">
+                <input type="radio" class="isRepeat" name="isRepeat" value="1" title="是" checked>
+                <input type="radio" class="isRepeat" name="isRepeat" value="0" title="否">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <!--<div class="layui-inline">-->
+            <label class="layui-form-label">流标原因</label>
+            <div class="layui-input-inline" style="width: 80%;">
+                <textarea name="flowRemark" placeholder="请输入流标原因" lay-verify="required" class="layui-textarea flowRemark"></textarea>
+            </div>
+            <!--<div class="layui-input-inline">-->
+                <!--<input type="text" class="layui-input flowRemark" name="flowRemark" lay-verify="required" placeholder="请输入流标原因">-->
+            <!--</div>-->
+        <!--</div>-->
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">验证码</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input smsCode" name="smsCode" lay-verify="required" placeholder="请输入短信验证码" maxlength="6">
+                <input type="hidden" class="layui-input captchaId" name="captchaId" >
+            </div>
+            <a class="layui-btn layui-btn-warm layui-btn-sm getSmsCode" id="sendSms">获取短信验证码</a>
+            <span class="smsTime">重新发送（<font>120</font>）</span>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="addUser">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="flowProduct.js"></script>
+</body>
+</html>

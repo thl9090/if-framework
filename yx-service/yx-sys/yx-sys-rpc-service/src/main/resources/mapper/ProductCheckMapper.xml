@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.dao.mapper.ProductCheckMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.sys.model.product.ProductCheck">
+        <result column="id" property="id" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="product_id" property="productId" />
+        <result column="type" property="type" />
+        <result column="first_check_status" property="firstCheckStatus" />
+        <result column="first_check_remark" property="firstCheckRemark" />
+        <result column="final_check_status" property="finalCheckStatus" />
+        <result column="final_check_remark" property="finalCheckRemark" />
+    </resultMap>
+
+    <resultMap id="VOResultMap" extends="BaseResultMap" type="com.yx.sys.model.vo.ProductCheckVO">
+        <result column="firstCheckStatusStr" property="firstCheckStatusStr"/>
+        <result column="finalCheckStatusStr" property="finalCheckStatusStr"/>
+        <result column="createUserName" property="createUserName"/>
+        <result column="updateUserName" property="updateUserName"/>
+
+    </resultMap>
+
+
+    <select id="selectByProductIdAndType" resultMap="BaseResultMap">
+        SELECT
+            pc.*
+        FROM
+            product_check pc
+        WHERE
+            pc.product_id=#{productId}
+            AND pc.type=#{type}
+        limit 1
+    </select>
+
+    <select id="selectVOByProductIdAndType" resultMap="VOResultMap">
+        SELECT
+            pc.*,
+            su.user_name as createUserName,
+            su2.user_name as updateUserName,
+            CASE pc.first_check_status
+            WHEN  1 THEN '审核通过'
+            WHEN  0 THEN '审核不通过'
+            END  as firstCheckStatusStr,
+            CASE pc.final_check_status
+            WHEN  1 THEN '审核通过'
+            WHEN  0 THEN '审核不通过'
+            END  as finalCheckStatusStr
+
+        FROM
+            product_check pc
+        LEFT JOIN sys_user su ON  su.id=pc.create_by
+        LEFT JOIN  sys_user su2 ON su2.id=pc.update_by
+        WHERE
+            pc.product_id=#{productId}
+            AND pc.type=#{type}
+
+        limit 1
+    </select>
+
+
+</mapper>

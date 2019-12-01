@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>查看公司信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+    <style type="text/css">
+        .layui-form-item .layui-inline {
+            width: 33.333%;
+            float: left;
+            margin-right: 0;
+        }
+
+        @media (max-width: 1240px) {
+            .layui-form-item .layui-inline {
+                width: 100%;
+                float: none;
+            }
+        }
+    </style>
+</head>
+<body class="childrenBody">
+<form class="layui-form" style="width:80%;" id="userForm">
+    <input type="hidden" name="id" id="id" class="id">
+    <div class="layui-form-item">
+        <label class="layui-form-label">客服热线：</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input servicePhone" name="servicePhone" lay-verify="required|servicePhone"
+            >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">服务时间:</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input serviceTime" name="serviceTime" lay-verify="required">
+            </textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">地址:</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input address" name="address"
+            >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">公司邮箱:</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input email" name="email"
+            >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">座  机:</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input telPhone" name="telPhone"
+            >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备案号:</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input recordation" name="recordation"
+            >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">公司名称:</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input companyName" name="companyName"
+            >
+            <input type="hidden" class="layui-input msg" name="msg"
+            >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">公司简称:</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input platform" name="platform"
+            >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">提示语:</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input prompt" name="prompt"
+            >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">域名:</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input url" name="url"
+            >
+        </div>
+    </div>
+    <div >
+        <div class="layui-input-block">
+            <button  class="layui-btn" lay-submit lay-filter="addBtn">编辑</button>
+            <button id="addBtn1" class="layui-btn" lay-submit="" lay-filter="addBtn1">立即提交</button>
+            <button id="primary" type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="companyList.js"></script>
+</body>
+</html>

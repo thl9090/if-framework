@@ -1,0 +1,100 @@
+spring:
+  #redis配置
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:     # 密码（默认为空）
+    timeout: 6000 # 连接超时时长（毫秒）
+    pool:
+      max-active: 200   # 连接池最大连接数（使用负值表示没有限制）
+      max-wait: 10000   # 连接池最大阻塞等待时间（使用负值表示没有限制）
+      max-idle: 150     # 连接池中的最大空闲连接
+      min-idle: 50      # 连接池中的最小空闲连接
+    lock:
+      waitTimeOut: 5
+      lockTimeOut: 30
+
+#数据库配置
+datasource:
+  type: com.alibaba.druid.pool.DruidDataSource
+  #主库配置
+  master:
+    url: jdbc:mysql://127.0.0.1:3306/yxdb?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: root
+    driverClassName: com.mysql.jdbc.Driver
+    initialSize: 5
+    maxActive: 20
+    minIdle: 5
+    maxWait: 60000
+    defaultReadOnly: false
+    filters: stat
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=2000
+    useGlobalDataSourceStat: true
+  # 从库配置
+  slaver:
+      url: jdbc:mysql://127.0.0.1:3306/yxdb?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+      username: root
+      password: root
+      driverClassName: com.mysql.jdbc.Driver
+      initialSize: 5
+      maxActive: 20
+      minIdle: 5
+      maxWait: 60000
+      defaultReadOnly: false
+      filters: stat
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=2000
+      useGlobalDataSourceStat: true
+
+#mybatis
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  #typeAliasesPackage: com.baomidou.springboot.entity
+  #typeEnumsPackage: com.baomidou.springboot.entity.enums
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 0
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 2
+    #驼峰下划线转换
+    db-column-underline: true
+    #刷新mapper 调试神器
+    refresh-mapper: true
+    #数据库大写下划线转换
+    #capital-mode: true
+    #序列接口实现类配置
+    #key-generator: com.baomidou.springboot.xxx
+    #逻辑删除配置
+    #logic-delete-value: 0
+    #logic-not-delete-value: 1
+    #sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
+    #自定义填充策略接口实现
+    #meta-object-handler: com.baomidou.springboot.xxx
+    #自定义SQL注入器
+    sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+
+# Tomcat
+server:
+  port: 8088
+
+#dubbo配置
+dubbo:
+  application:
+    name: yx-sys-dubbo-provider
+    owner: yx-sys-dubbo-provider
+  registry:
+    protocol: zookeeper
+    address: localhost:2181
+  protocol:
+    name: dubbo
+    port: -1
+
+#日志
+logging:
+  level:
+     root: info

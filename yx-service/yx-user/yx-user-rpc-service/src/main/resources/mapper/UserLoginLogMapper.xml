@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.user.dao.mapper.UserLoginLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.user.model.UserLoginLog">
+    	<result column="id" property="id" />
+    	<result column="user_id" property="userId" />
+    	<result column="channel_type" property="channelType" />
+        <result column="channel_version" property="channelVersion" />
+    	<result column="ip" property="ip" />
+    	<result column="dervice_name" property="derviceName" />
+        <result column="login_time" property="loginTime" />
+
+    </resultMap>
+
+    <insert id="insertSelective" parameterType="com.yx.user.model.UserLoginLog" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO
+        ${tableName}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="channelType != null ">channel_type,</if>
+            <if test="channelVersion != null and channelVersion!='' ">channel_version,</if>
+            <if test="ip != null and ip != ''">ip,</if>
+            <if test="derviceName != null and derviceName != ''">dervice_name,</if>
+            <if test="loginTime != null">login_time,</if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="channelType != null ">#{channelType},</if>
+            <if test="channelVersion != null and channelVersion!='' ">#{channelVersion},</if>
+            <if test="ip != null and ip != ''">#{ip},</if>
+            <if test="derviceName != null and derviceName != ''">#{derviceName},</if>
+            <if test="loginTime != null">#{loginTime},</if>
+        </trim>
+    </insert>
+
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT *
+        FROM ${userLoginLog.tableName}
+        WHERE  1=1
+        <if test="userLoginLog.userId!=null ">
+            AND user_id=#{userLoginLog.userId}
+        </if>
+        <if test="bankEtkLog.channelType!=null ">
+            AND  channel_type=#{userLoginLog.channelType}
+        </if>
+        <if test="bankEtkLog.createTimeStart!=null ">
+            AND login_time &gt;= #{userLoginLog.createTimeStart}
+        </if>
+        <if test="bankEtkLog.createTimeEnd!=null ">
+            AND login_time &lt;= #{userLoginLog.createTimeEnd}
+        </if>
+        ORDER BY id  DESC
+
+    </select>
+
+    <select id="selectLateLogByUserId" resultMap="BaseResultMap">
+        SELECT *
+        FROM ${tableName}
+        WHERE  user_id=#{userId}
+        ORDER BY id DESC
+        limit 1
+
+    </select>
+
+
+</mapper>

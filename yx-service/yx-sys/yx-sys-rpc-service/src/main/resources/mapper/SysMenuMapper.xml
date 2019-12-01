@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.dao.mapper.SysMenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.sys.model.SysMenu">
+        <result column="id" property="id"/>
+        <result column="remark_" property="remark"/>
+        <result column="enable_" property="enable"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="menu_name" property="menuName"/>
+        <result column="menu_type" property="menuType"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="parentName" property="parentName"/>
+        <result column="iconcls_" property="iconcls"/>
+        <result column="request_" property="request"/>
+        <result column="expand_" property="expand"/>
+        <result column="sort_no" property="sortNo"/>
+        <result column="is_show" property="isShow"/>
+        <result column="permission_" property="permission"/>
+    </resultMap>
+
+    <select id="selectMenuTreeByUserId" resultMap="BaseResultMap">
+        SELECT
+            menu.*
+        FROM
+            sys_menu menu
+        WHERE
+            is_show = 1
+        AND is_del = 0
+        AND enable_ =1
+        AND (
+            EXISTS (
+                SELECT
+                    1
+                FROM
+                    sys_user_menu um
+                WHERE
+                    um.user_id = #{userId} and um.menu_id = menu.id)
+                OR EXISTS (
+                    SELECT
+                        1
+                    FROM
+                        sys_user_role ur
+                    JOIN sys_role_menu rm ON ur.role_id = rm.role_id
+                    WHERE
+                        ur.user_id = #{userId} and rm.menu_id = menu.id))
+                    ORDER BY
+                        parent_id,
+                        sort_no
+    </select>
+
+    <select id="selectPage"  resultMap="BaseResultMap">
+        SELECT a.*, b.menu_name as parent_name from sys_menu a
+            left join sys_menu b
+              on a.parent_id = b.id
+         <where>
+            ${ew.sqlSegment}
+         </where>
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT a.*, b.menu_name as parent_name from sys_menu a
+              left join sys_menu b
+                  on a.parent_id = b.id
+              WHERE a.id = #{id}
+    </select>
+
+    <select id="selectVOByPage" resultMap="BaseResultMap">
+        SELECT
+            sm.*,
+            sm2.menu_name as parentName
+
+        FROM  sys_menu sm
+        LEFT JOIN  sys_menu sm2 ON sm2.id=sm.parent_id
+        WHERE sm.is_del=0
+        AND sm.enable_=1
+        <if test="sysMenu.menuName!=null and sysMenu.menuName!='' ">
+            AND sm.menu_name=#{sysMenu.menuName}
+        </if>
+        <if test="sysMenu.parentName!=null and sysMenu.parentName!='' ">
+            AND sm2.menu_name=#{sysMenu.parentName}
+        </if>
+        <if test="sysMenu.menuType!=null ">
+            AND sm.menu_type=#{sysMenu.menuType}
+        </if>
+        ORDER BY sm.id DESC
+
+    </select>
+
+
+</mapper>

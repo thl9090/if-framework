@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.dao.mapper.SysLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.sys.model.SysLog">
+        <result column="id" property="id" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="user_id" property="userId" />
+        <result column="user_name" property="userName" />
+        <result column="operation_" property="operation" />
+        <result column="operation_type" property="operationType" />
+        <result column="method_" property="method" />
+        <result column="params_" property="params" />
+        <result column="result_" property="result" />
+        <result column="time_" property="time" />
+        <result column="ip_" property="ip" />
+        <result column="source" property="source" />
+
+    </resultMap>
+
+    <insert id="insert" parameterType="com.yx.sys.model.SysLog" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO
+        ${tableName}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null ">create_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="updateBy">update_by,</if>
+            <if test="userId != null ">user_id,</if>
+            <if test="userName != null and userName!='' ">user_name,</if>
+            <if test="operation != null and operation!='' ">operation_,</if>
+            <if test="operationType != null">operation_type,</if>
+            <if test="method != null and method!='' ">method_,</if>
+            <if test="params != null and params!='' ">params_,</if>
+            <if test="result != null ">result_,</if>
+            <if test="time != null">time_,</if>
+            <if test="ip != null and ip!='' ">ip_,</if>
+            <if test="source != null">source,</if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null ">#{createBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="updateBy">#{updateBy},</if>
+            <if test="userId != null ">#{userId},</if>
+            <if test="userName != null and userName!='' ">#{userName},</if>
+            <if test="operation != null and operation!='' ">#{operation},</if>
+            <if test="operationType != null">#{operationType},</if>
+            <if test="method != null and method!='' ">#{method},</if>
+            <if test="params != null and params!='' ">#{params},</if>
+            <if test="result != null ">#{result},</if>
+            <if test="time != null">#{time},</if>
+            <if test="ip != null and ip!='' ">#{ip},</if>
+            <if test="source != null">#{source},</if>
+        </trim>
+    </insert>
+
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT  *
+
+        FROM  ${sysLog.tableName}
+        WHERE 1=1
+        <if test="sysLog.userName!=null and sysLog.userName!=''">
+            AND  user_name like concat(#{sysLog.userName},'%')
+        </if>
+        <if test="sysLog.operation!=null and sysLog.operation!='' ">
+            AND  operation_  like concat(#{sysLog.operation},'%')
+        </if>
+        <if test="sysLog.source!=null">
+            AND  source=#{sysLog.source}
+        </if>
+
+        ORDER BY id DESC
+
+    </select>
+
+
+
+
+</mapper>

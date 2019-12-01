@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.dao.mapper.SysOssMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.sys.model.SysOss">
+        <result column="id" property="id" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="url" property="url" />
+    </resultMap>
+
+    <resultMap id="VOResultMap" extends="BaseResultMap" type="com.yx.sys.model.vo.SysOssVO">
+
+
+    </resultMap>
+
+
+
+
+    <select id="getById" resultMap="BaseResultMap">
+        SELECT
+        c.*
+        FROM  sys_oss c
+        WHERE
+        c.id=#{id}
+    </select>
+
+
+    <select id="selectVOPage"  resultMap="VOResultMap">
+        SELECT
+          c.*
+        FROM  sys_oss c
+        WHERE  1=1
+        <!-- 查询条件根据实际的需要去加减 -->
+        <if test="sysOssVO.createTimeStart!=null ">
+            AND c.create_time &gt;=#{sysOssVO.createTimeStart}
+        </if>
+        <if test="sysOssVO.createTimeEnd!=null ">
+            AND c.create_time &lt;=#{sysOssVO.createTimeEnd}
+        </if>
+
+        ORDER BY  c.id DESC
+    </select>
+
+
+</mapper>

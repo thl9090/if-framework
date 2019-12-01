@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.dao.mapper.SysAuthorizeMapper">
+
+    <select id="selectPermissionsByUserId" resultType="java.lang.String">
+        SELECT
+            m.permission_ AS permission
+        FROM
+            (
+                SELECT
+                    id
+                FROM
+                    sys_user
+                WHERE
+                    is_del = 0
+                AND enable_ = 1
+                AND id = #{userId}
+            ) AS u
+        LEFT JOIN sys_user_role AS ur ON u.id = ur.user_id
+        LEFT JOIN sys_role_menu AS rm ON ur.role_id = rm.role_id
+        LEFT JOIN (
+            SELECT
+                id,
+                permission_
+            FROM
+                sys_menu
+            WHERE
+                is_del = 0
+            AND enable_ = 1
+        ) AS m ON rm.menu_id = m.id
+    </select>
+
+</mapper>

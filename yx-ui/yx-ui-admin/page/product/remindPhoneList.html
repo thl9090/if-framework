@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>App提醒手机号列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_495397_jzxo653foj6skyb9.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+</head>
+<body class="childrenBody">
+<blockquote class="layui-elem-quote news_search">
+    <form class="layui-form" id="dataForm">
+        <!--<div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">App类型</label>
+                <div class="layui-input-inline">
+                    <select id="appType" name="appType">
+                        <option value="">请选择</option>
+                        <option value="1">安卓</option>
+                        <option value="2">IOS</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">App类型</label>
+                <div class="layui-input-inline">
+                    <select id="versionStatus" name="versionStatus">
+                        <option value="">请选择</option>
+                        <option value="1">未发布</option>
+                        <option value="2">已发布</option>
+                    </select>
+                </div>
+            </div>
+        </div>-->
+        <div class="layui-inline">
+            <a class="layui-btn search_btn">查询</a>
+        </div>
+    </form>
+</blockquote>
+
+<table class="layui-table" id="dataTable" lay-filter="tableFilter"></table>
+
+<!-- 分页控件div -->
+<div id="pageDiv"></div>
+
+<!-- 表头工具栏 -->
+<script type="text/html" id="headerToolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addRemindPhone">新增提醒手机号</button>
+    </div>
+</script>
+
+<!-- 数据列工具栏 -->
+<script type="text/html" id="toolBar">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript">
+    layui.config({
+        base: "../../js/"
+    }).use(['base', 'form', 'layer', 'jquery', 'table'], function () {
+        var base = layui.base,
+            form = layui.form,
+            layer = parent.layer === undefined ? layui.layer : parent.layer,
+            $ = layui.jquery,
+            table = layui.table;
+
+        editPhone = null;
+
+        //field: 'phone',
+        var tableIns = table.render({
+            //设置表头
+            cols: [[
+                {
+                    field: 'phone', title: '提醒手机号', width: '85%'
+                },
+                {field: 'opt', title: '操作', fixed: 'right', width: '15%', align: 'center', toolbar: '#toolBar'}
+            ]],
+            url: 'product/pageRemindPhone',
+            method: 'post',
+            contentType: 'application/json',
+            request: {
+                pageName: 'current', //页码的参数名称，默认：page
+                limitName: 'size' //每页数据量的参数名，默认：limit
+            },
+            response: {
+                statusCode: 200, //成功的状态码，默认：0
+                msgName: 'message' //状态信息的字段名称，默认：msg
+            },
+            toolbar: '#headerToolbar',
+            defaultToolbar: ['filter'],
+            elem: '#dataTable',
+            page: {
+                elem: 'pageDiv',
+                limit: 10,
+                limits: [10, 20, 30, 40, 50]
+            }
+        });
+
+        //头工具栏事件
+        table.on('toolbar(tableFilter)', function (obj) {
+            switch (obj.event) {
+                case 'addRemindPhone':
+                    layui.layer.open({
+                        title: '新增提醒手机号',
+                        type: 2,
+                        content: 'addRemindPhone.html',
+                        area: ['500px', '300px'],
+                        success: function (layero, index) {
+                            setTimeout(function () {
+                                layui.layer.tips('点击此处返回', '.layui-layer-setwin .layui-layer-close', {
+                                    tips: 3
+                                });
+                            }, 500)
+                        }
+                    });
+                    layui.layer.full(index);
+                    break;
+            }
+            ;
+        });
+
+        //监听工具条
+        table.on('tool(tableFilter)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            phoneData = obj.data;
+            editPhone = phoneData.phone;
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            switch (layEvent) {
+                case 'edit':
+                    layui.layer.open({
+                        title: '修改提醒手机号',
+                        type: 2,
+                        content: 'editRemindPhone.html',
+                        area: ['700px', '300px'],
+                        success: function (layero, index) {
+                            setTimeout(function () {
+                                layui.layer.tips('点击此处返回', '.layui-layer-setwin .layui-layer-close', {
+                                    tips: 3
+                                });
+                            }, 500)
+                        }
+                    });
+                    break;
+                case 'del':
+                    layer.confirm('您确定要删除【' + phoneData.phone + '】提醒手机号吗？', {
+                        icon: 3,
+                        title: '确认'
+                    }, function () {
+                        $.ajax({
+                            type: 'post',
+                            url: 'product/delRemindPhone/' + phoneData.phone,
+                            success: function (data) {
+                                if (data.code != 200) {
+                                    layer.msg(data.message, {icon: 2});
+                                    return;
+                                }
+                                $(".search_btn").click();
+                                layer.msg('删除提醒手机号成功', {icon: 1, time: 2000});
+                            }, error: function (error) {
+                                layer.msg('调用服务器异常', {icon: 2, time: 2000});
+                            }
+                        });
+                    });
+                    break;
+            }
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(tableFilter)', function (obj) {
+        });
+
+        //查询
+        $(".search_btn").click(function () {
+            tableIns.reload({
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        });
+
+    });
+</script>
+</body>
+</html>

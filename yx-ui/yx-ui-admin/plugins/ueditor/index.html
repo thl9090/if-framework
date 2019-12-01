@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>demo</title>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <style>
+        div {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="col-sm-11" id="editorDiv">
+</div>
+</body>
+<!-- 富文本 -->
+<script type="text/javascript" charset="utf-8" src="js/editor_api.js"></script>
+<script type="text/javascript" charset="utf-8" src="ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="ueditor.all.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="lang/zh-cn/zh-cn.js"></script>
+<script th:inline="javascript" type="text/javascript">
+    $(function () {
+        $('#editorDiv').html('<script id="editor" type="text/plain" style="width:1024px;height:500px;"/>');
+        var um = UE.getEditor('editor', {
+            imageFieldName: "upfile", //* 提交的图片表单名称 *!/
+            allowDivTransToP: false
+        });
+
+       /* UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
+        UE.Editor.prototype.getActionUrl = function (action) {
+            alert("333333333333333333333333333");
+            alert("action:"+action);
+            return "/manager/UeditorUploadImgServlet";
+            if (action == 'uploadimage') {
+                alert("11111111111111111111111111");
+                var url = "pictureController/uploadImage";
+                return url;
+            } else {
+                return this._bkGetActionUrl.call(this, action);
+            }
+        };
+*/
+        /* 赋值脚本 */
+        um.ready(function(){//监听编辑器实例化完成的事件
+            um.setContent("123");
+        })
+    });
+
+    function getContent() {
+        var arr = [];
+        arr.push(UE.getEditor('editor').getContent());
+        return arr.join("<br>");
+    }
+
+   </script>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>平台经营信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+</head>
+<body class="childrenBody">
+<form class="layui-form" style="width:80%;" >
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">数据截至时间</label>
+        <div class="layui-input-block">
+            <input type="text" name="modelTime" id="modelTime" lay-verify="required"
+                   placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input modelTime">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">自成立累计借贷金额（元）</label>
+        <div class="layui-input-block">
+            <input type="text" name="borrowingAmount" id = "borrowingAmount" class="layui-input borrowingAmount" lay-verify="required" placeholder="请输入自成立累计借贷金额（元）">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">自成立累计借贷笔数</label>
+        <div class="layui-input-block">
+            <input type="text" name="borrowingNum" class="layui-input borrowingNum" lay-verify="required" placeholder="请输入自成立累计借贷笔数">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">借贷余额（万元）</label>
+        <div class="layui-input-block">
+            <input type="text" name="borrowSurplus" class="layui-input borrowSurplus" lay-verify="required" placeholder="请输入借贷余额（万元）">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">利息余额（万元）</label>
+        <div class="layui-input-block">
+            <input type="text" name="interestBalance" class="layui-input interestBalance" lay-verify="required" placeholder="请输入利息余额（万元）">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">待还笔数</label>
+        <div class="layui-input-block">
+            <input type="text" name="toBePaidNum" class="layui-input toBePaidNum" lay-verify="required" placeholder="请输入待还笔数">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">累计出借人数量（人）</label>
+        <div class="layui-input-block">
+            <input type="text" name="lenderTotal" class="layui-input lenderTotal" lay-verify="required" placeholder="请输入累计出借人数量（人）">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">累计借款人数量（人）</label>
+        <div class="layui-input-block">
+            <input type="text" name="borrowerTotal" class="layui-input borrowerTotal" lay-verify="required" placeholder="请输入累计借款人数量（人）">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">当期出借人数量（人）</label>
+        <div class="layui-input-block">
+            <input type="text" name="monthLenderTotal" class="layui-input monthLenderTotal" lay-verify="required" placeholder="请输入当期出借人数量（人）">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">当期借款人数量（人）</label>
+        <div class="layui-input-block">
+            <input type="text" name="monthBorrowingNum" class="layui-input monthBorrowingNum" lay-verify="required" placeholder="请输入当期借款人数量（人）">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">前十大借款人待还金额占比</label>
+        <div class="layui-input-block">
+            <input type="text" name="topTenBorrowed" class="layui-input topTenBorrowed" lay-verify="required" placeholder="请输入前十大借款人待还金额占比">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">最大单一借款人待还金额占比</label>
+        <div class="layui-input-block">
+            <input type="text" name="topOneBorrowed" class="layui-input topOneBorrowed" lay-verify="required" placeholder="请输入最大单一借款人待还金额占比">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">关联关系借款余额</label>
+        <div class="layui-input-block">
+            <input type="text" name="relationSurplus" class="layui-input relationSurplus" lay-verify="required" placeholder="请输入关联关系借款余额">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">关联关系借款笔数</label>
+        <div class="layui-input-block">
+            <input type="text" name="relationNum" class="layui-input relationNum" lay-verify="required" placeholder="请输入关联关系借款笔数">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">逾期金额（本+息）（万元）</label>
+        <div class="layui-input-block">
+            <input type="text" name="overdueAmount" class="layui-input overdueAmount" lay-verify="required" placeholder="请输入逾期金额（本+息）（万元）">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">逾期笔数（本+息）</label>
+        <div class="layui-input-block">
+            <input type="text" name="overdueNum" class="layui-input overdueNum" lay-verify="required" placeholder="请输入逾期笔数（本+息）">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">逾期金额（90天以上，本金）（元）</label>
+        <div class="layui-input-block">
+            <input type="text" name="overdueCapital" class="layui-input overdueCapital" lay-verify="required" placeholder="请输入逾期金额（90天以上，本金）（元）">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">逾期笔数（90天以上，本金）</label>
+        <div class="layui-input-block">
+            <input type="text" name="overdueCapitalNum" class="layui-input overdueCapitalNum" lay-verify="required" placeholder="请输入逾期笔数（90天以上，本金）">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">代偿金额（本+息）（万元）</label>
+        <div class="layui-input-block">
+            <input type="text" name="compensationAmount" class="layui-input compensationAmount" lay-verify="required" placeholder="请输入代偿金额（本+息）（万元）">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">代偿笔数（本+息）</label>
+        <div class="layui-input-block">
+            <input type="text" name="compensationNum" class="layui-input compensationNum" lay-verify="required" placeholder="请输入代偿笔数（本+息）">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">累计代偿金额（万元）</label>
+        <div class="layui-input-block">
+            <input type="text" name="replaceRepayAmount" class="layui-input replaceRepayAmount" lay-verify="required" placeholder="请输入累计代偿金额（万元）">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">累计代偿笔数</label>
+        <div class="layui-input-block">
+            <input type="text" name="replaceRepayNum" class="layui-input replaceRepayNum" lay-verify="required" placeholder="请输入累计代偿笔数">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="adddept">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="operateInformation.js"></script>
+</body>
+</html>

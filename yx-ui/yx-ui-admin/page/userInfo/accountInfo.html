@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>账户信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+</head>
+<body class="childrenBody">
+<form class="layui-form" style="width:80%;">
+    <input type="hidden" id="id" name="id" class="id">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="min-width: 120px;">手机号码</label>
+        <div class="layui-input-inline">
+            <input type="text" name="phone" class="layui-input phone" value="" readonly>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="min-width: 120px;">真实姓名</label>
+        <div class="layui-input-inline">
+            <input type="text" name="realName" class="layui-input realName" value="" readonly>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="min-width: 120px;">总资产</label>
+        <div class="layui-input-inline">
+            <input type="text" name="assetsAmountStr" class="layui-input assetsAmountStr" value="" readonly>
+        </div>
+        <span style='float:left;margin-top:9px'>元</span>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="min-width: 120px;">可用余额</label>
+        <div class="layui-input-inline">
+            <input type="text"  name="availableBal" class="layui-input availableBal" value="" readonly>
+        </div>
+        <span style='float:left;margin-top:9px'>元</span>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="min-width: 120px;">待回款金额</label>
+        <div class="layui-input-inline">
+            <input type="text"  name="waitReceiptAmountStr" class="layui-input waitReceiptAmountStr" value="" readonly>
+        </div>
+        <span style='float:left;margin-top:9px'>元</span>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="min-width: 120px;">累计收益金额</label>
+        <div class="layui-input-inline">
+            <input type="text"  name="totalIncomeStr" class="layui-input totalIncomeStr" value="" readonly>
+        </div>
+        <span style='float:left;margin-top:9px'>元</span>
+    </div>
+</form>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript">
+    layui.config({
+        base: "../../js/"
+    }).use(['base', 'form', 'layer', 'jquery', 'laydate', 'laypage'], function () {
+        var base = layui.base,
+            form = layui.form,
+            layer = parent.layer === undefined ? layui.layer : parent.layer,
+            $ = layui.jquery,
+            laydate = layui.laydate;
+            var dataId = parent.dataId;
+            var phone= parent.phone;
+            var realName=parent.realName;
+            $(".phone").val(phone);
+            $(".realName").val(realName);
+
+            var datas = {
+                id: dataId
+            };
+
+            var index = top.layer.msg('数据加载中，请稍候', {icon: 16, time: false, shade: 0.8});
+            $.ajax({
+                type: 'POST',
+                url: "userInfo/queryBalance",
+                data: JSON.stringify(datas),
+                contentType: "application/json",
+                success: function (data) {
+                    top.layer.close(index);
+                    if (data.code === 200) {
+                           $(".assetsAmountStr").val(data.data.assetsAmountStr);
+                           $(".waitReceiptAmountStr").val(data.data.waitReceiptAmountStr);
+                           $(".totalIncomeStr").val(data.data.totalIncomeStr);
+                           $(".availableBal").val(data.data.availableBal);
+
+                            // layer.msg('修改成功', {icon: 1});
+                            // layer.closeAll("iframe");
+                            // //刷新父页面
+                            // parent.location.reload();
+                    } else {
+                        layer.msg(data.message, {icon: 2});
+                    }
+                }
+            });
+
+            //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            return false;
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>新增版本</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+</head>
+<body class="childrenBody">
+<form class="layui-form" style="width:90%;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">App类型</label>
+        <div class="layui-input-block">
+            <input disabled type="text" id="appType" name="appType" class="layui-input" placeholder="请输入版本号（如：2.3.4）">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">版本号</label>
+        <div class="layui-input-block">
+            <input disabled type="text" id="packageVersion" name="packageVersion" class="layui-input" placeholder="请输入版本号（如：2.3.4）">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">App包地址</label>
+        <div class="layui-input-block">
+            <input disabled type="text" id="packageUrl" name="packageUrl" class="layui-input" placeholder="点击上传App包信息">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">升级方式</label>
+        <div class="layui-input-block">
+            <input disabled type="text" id="upgradeMode" name="upgradeMode" class="layui-input" placeholder="请输入版本号（如：2.3.4）">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">版本描述</label>
+        <div class="layui-input-block">
+            <div id="descDiv">
+            </div>
+        </div>
+    </div>
+    </div>
+</form>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript">
+    layui.config({
+        base: "../../js/"
+    }).use(['base', 'form', 'layer', 'jquery', 'laydate', 'tree', 'upload', 'layedit'], function () {
+        var base = layui.base,
+            form = layui.form,
+            laydate = layui.laydate,
+            upload = layui.upload,
+            layedit = layui.layedit,
+            layer = parent.layer === undefined ? layui.layer : parent.layer,
+            $ = layui.jquery;
+
+        descArr = new Array();
+
+        version = window.parent.version;
+
+        $('#appType').val(version.appTypeStr);
+        $('#packageVersion').val(version.packageVersion);
+        $('#packageUrl').val(version.packageUrl);
+        $('#upgradeMode').val(version.upgradeModeStr);
+
+        var descList = version.descList;
+        var item = null;
+        for (var i = 0, len = descList.length; i < len; i++) {
+            item = descList[i];
+            var index = i + 1;
+            appendDescDiv(index);
+            $('#descInfo' + index).val(item);
+            descArr.push(index);
+        }
+
+        function appendDescDiv(index){
+            var descDiv = new StringBuffer();
+            descDiv.append('<div id="descDiv' + index + '" class="layui-form-item" style="margin-left: -30px;">');
+            descDiv.append('<label class="layui-form-label" style="cursor: pointer;">');
+            if (index != 1) {
+                //descDiv.append('<a data-index="' + index + '" style="margin-left: -40px;" class="layui-btn layui-btn-warm layui-btn-xs" lay-submit lay-filter="removeItem">');
+                //descDiv.append('<i class="layui-icon layui-icon-close removeItem"></i>');
+                //descDiv.append('</a>');
+            }
+            descDiv.append('<span style="margin-left: 20px;">');
+            descDiv.append(index + '.');
+            descDiv.append('</span>');
+            descDiv.append('</label>');
+            descDiv.append('<div class="layui-input-block">');
+            descDiv.append('<textarea disabled id="descInfo' + index + '" class="layui-textarea" placeholder="填写版本描述（最多1000个字）" rows="5" maxlength="1000">');
+            descDiv.append('</textarea>');
+            descDiv.append('</div>');
+            descDiv.append('</div>');
+            $('#descDiv').append(descDiv.toString());
+            form.render();
+        }
+
+    });
+
+</script>
+</body>
+</html>

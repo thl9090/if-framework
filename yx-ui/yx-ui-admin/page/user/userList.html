@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>用户管理--YX管理平台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_495397_jzxo653foj6skyb9.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+    <link rel="stylesheet" href="../../css/user.css" media="all"/>
+</head>
+<body class="childrenBody">
+<blockquote class="layui-elem-quote news_search">
+    <form class="layui-form"  id="dataForm">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">账号</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="" placeholder="账号" class="layui-input search_input account">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="" placeholder="姓名" class="layui-input search_input userName">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">手机号</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="" placeholder="手机号" class="layui-input search_input phone">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <a class="layui-btn search_btn">查询</a>
+        </div>
+        <permission value="sys:user:add">
+            <div class="layui-inline">
+                <a class="layui-btn layui-btn-normal usersAdd_btn">添加用户</a>
+            </div>
+        </permission>
+        <permission value="sys:user:delete">
+            <div class="layui-inline">
+                <a class="layui-btn layui-btn-danger batchDel">批量删除</a>
+            </div>
+        </permission>
+        <div class="layui-inline">
+            <a class="layui-btn onlineUserList_btn">在线用户列表</a>
+        </div>
+    </form>
+</blockquote>
+
+<table class="layui-table" id="userTable" lay-filter="tableFilter"></table>
+
+<!-- 分页控件div -->
+<div id="pageDiv"></div>
+
+<!-- 表头工具栏 -->
+<script type="text/html" id="headerToolbar">
+    当前在线用户数：<label id="onlineUserCountLbl">0</label>
+</script>
+
+<!-- 工具栏模板 -->
+<div style="display: none;" id="toolBar">
+    <permission value="sys:user:read">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    </permission>
+    <permission value="sys:user:update">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    </permission>
+    <permission value="sys:user:delete">
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </permission>
+    <permission value="sys:user:enableAndDisable">
+        <a class="layui-btn layui-btn-{{d.enable == 0 ? 'normal' : 'warm'}} layui-btn-xs" lay-event="{{d.enable == 0 ? 'enable' : 'disable'}}">{{d.enable == 0 ? "启用" : "禁用"}}</a>
+    </permission>
+
+</div>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="userList.js"></script>
+<script type="text/html" id="sexTpl">
+    {{#  if(d.sex === 1){ }}
+    <div>{{"男"}}</div>
+    {{#  } }}
+    {{#  if(d.sex === 2){ }}
+    <div>{{"女"}}</div>
+    {{#  } }}
+    {{#  if(d.sex === 0){ }}
+    <div>{{"保密"}}</div>
+    {{#  } }}
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://code.alibabatech.com/schema/dubbo
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <!-- 配置可参考 http://dubbo.io/User+Guide-zh.htm -->
+    <!-- 服务提供方应用名，用于计算依赖关系 -->
+    <dubbo:application name="${dubbo.application.name}" owner="${dubbo.application.owner}"/>
+    <!-- 定义 zookeeper 注册中心地址及协议 -->
+    <dubbo:registry protocol="${dubbo.registry.protocol}" address="${dubbo.registry.address}" client="zkclient"/>
+    <!-- 定义 Dubbo 协议名称及使用的端口，dubbo 协议缺省端口为 20880，如果配置为 -1 或者没有配置 port，则会分配一个没有被占用的端口 -->
+    <dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}"/>
+    <!-- 声明需要暴露的服务接口 -->
+    <dubbo:service interface="com.yx.sys.rpc.api.CodeDemoService" ref="codeDemoService" timeout="10000"/>
+
+    <dubbo:service interface="com.yx.sys.rpc.api.SysUserService" ref="sysUserService" timeout="10000"/>
+    <dubbo:service interface="com.yx.sys.rpc.api.SysAuthorizeService" ref="sysAuthorizeService" timeout="10000"/>
+    <dubbo:service interface="com.yx.sys.rpc.api.SysMenuService" ref="sysMenuService" timeout="10000"/>
+    <dubbo:service interface="com.yx.sys.rpc.api.SysDeptService" ref="sysDeptService" timeout="10000"/>
+    <dubbo:service interface="com.yx.sys.rpc.api.SysRoleService" ref="sysRoleService" timeout="10000"/>
+    <dubbo:service interface="com.yx.sys.rpc.api.SysDicService" ref="sysDicService" timeout="10000"/>
+    <dubbo:service interface="com.yx.sys.rpc.api.SysParamService" ref="sysParamService" timeout="10000"/>
+    <dubbo:service interface="com.yx.sys.rpc.api.SysLogService" ref="sysLogService" timeout="10000"/>
+    <dubbo:service interface="com.yx.sys.rpc.api.ProductService" ref="productService" timeout="10000"/>
+    <dubbo:service interface="com.yx.sys.rpc.api.ProductFileService" ref="productFileService" timeout="10000"/>
+    <dubbo:service interface="com.yx.sys.rpc.api.ProductCheckService" ref="productCheckService" timeout="10000"/>
+
+    <dubbo:service interface="com.yx.sys.rpc.api.SysOssService" ref="sysOssService" timeout="10000"/>
+    <dubbo:service interface="com.yx.sys.rpc.api.SysContentService" ref="sysContentService" timeout="10000"/>
+    <dubbo:service interface="com.yx.sys.rpc.api.SysSlideshowService" ref="sysSlideshowService" timeout="10000" />
+
+    <dubbo:service interface="com.yx.sys.rpc.api.ExportLogService" ref="exportLogService" timeout="10000"/>
+    <dubbo:service interface="com.yx.sys.rpc.api.SysMessageCenterService" ref="sysMessageCenterService" timeout="10000"/>
+
+    <dubbo:service interface="com.yx.sys.rpc.api.AppPackageVersionService" ref="appPackageVersionService" timeout="10000"/>
+
+
+
+</beans>

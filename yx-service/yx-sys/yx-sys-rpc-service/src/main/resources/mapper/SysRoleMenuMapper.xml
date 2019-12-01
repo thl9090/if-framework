@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.dao.mapper.SysRoleMenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.sys.model.SysRoleMenu">
+        <result column="id" property="id"/>
+        <result column="enable_" property="enable"/>
+        <result column="is_del" property="isDel"/>
+        <result column="remark_" property="remark"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="role_id" property="roleId"/>
+        <result column="menu_id" property="menuId"/>
+    </resultMap>
+
+    <select id="selectMenuIdListByRoleId" resultType="Long">
+        SELECT
+            menu_id
+        FROM
+            sys_role_menu
+        WHERE
+            role_id = #{roleId}
+        AND is_del = 0
+        AND enable_ = 1
+    </select>
+
+</mapper>

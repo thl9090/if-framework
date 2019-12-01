@@ -1,0 +1,139 @@
+package ${package.Controller};
+
+
+import org.springframework.web.bind.annotation.RequestMapping;
+
+    #if(${restControllerStyle})
+    import org.springframework.web.bind.annotation.RestController;
+    #else
+    import org.springframework.stereotype.Controller;
+    #end
+    #if(${superControllerClassPackage})
+    import ${superControllerClassPackage};
+    #end
+import com.yx.common.core.model.PageModel;
+import com.yx.common.core.Constants;
+import com.yx.common.web.model.ResultModel;
+import com.yx.common.web.util.ResultUtil;
+import com.yx.code.entity.${entity};
+import com.yx.code.service.${table.serviceName};
+import cn.hutool.core.lang.Assert;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import javax.validation.Valid;
+import java.util.Date;
+import java.util.Arrays;
+
+/**
+ * <p>
+ * $!{table.comment}前端控制器
+ * </p>
+ *
+ * @author TangHuaLiang
+ * @since ${date}
+ */
+###if(${restControllerStyle})
+@RestController
+###else
+##@Controller
+###end
+@RequestMapping("/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
+#if(${kotlin})
+class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
+
+#else
+    #if(${superControllerClass})
+    public class ${table.controllerName} extends ${superControllerClass} {
+    #else
+    public class ${table.controllerName} {
+    #end
+
+
+@Autowired
+private ${table.serviceName} service;
+
+/**
+ * 根据$!{table.comment}ID查询
+ *
+ * @param id $!{table.comment}ID
+ * @return ResultModel
+ * @author TangHuaLiang
+ * @date ${date}
+ */
+@GetMapping("/select/{id}")
+public ResultModel selectById(@PathVariable Long id) {
+        Assert.notNull(id);
+    ${entity} entity = service.selectById(id);
+        return ResultUtil.ok(entity);
+        }
+
+/**
+ * 查询$!{table.comment}分页方法
+ *
+ * @param pageModel 分页实体
+ * @return com.yx.common.web.model.ResultModel
+ * @author TangHuaLiang
+ * @date ${date}
+ */
+@PostMapping("/selectPage")
+public ResultModel selectPage(@RequestBody PageModel<${entity}> pageModel) {
+        pageModel = (PageModel<${entity}>) service.selectPage(pageModel);
+        return ResultUtil.ok(pageModel);
+        }
+
+/**
+ * 新增$!{table.comment}方法
+ *
+ * @param entity $!{table.comment}实体
+ * @return com.yx.common.web.model.ResultModel
+ * @author TangHuaLiang
+ * @date ${date}
+ */
+@PostMapping("/add")
+public ResultModel add(@Valid @RequestBody ${entity} entity) {
+        if (entity != null) {
+        entity.setCreateBy(this.getCurrentUserId());
+        entity.setUpdateBy(this.getCurrentUserId());
+        }
+        return ResultUtil.ok(service.add(entity));
+        }
+
+/**
+ * 修改$!{table.comment}方法
+ *
+ * @param entity $!{table.comment}实体
+ * @return com.yx.common.web.model.ResultModel
+ * @author TangHuaLiang
+ * @date ${date}
+ */
+@PostMapping("/update")
+public ResultModel update(@RequestBody ${entity} entity) {
+        entity.setUpdateBy(this.getCurrentUserId());
+        entity.setUpdateTime(new Date());
+        service.updateById(entity);
+        return ResultUtil.ok();
+        }
+
+/**
+ * 批量删除$!{table.comment}方法
+ *
+ * @param ids $!{table.comment}ID集合
+ * @return com.yx.common.web.model.ResultModel
+ * @author TangHuaLiang
+ * @date ${date}
+ */
+@PostMapping("/delete")
+public ResultModel delete(@RequestBody Long[] ids) {
+        Assert.notNull(ids);
+        return ResultUtil.ok(service.deleteBatchIds(Arrays.asList(ids)));
+        }
+
+
+        }
+
+#end

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>修改标的名称</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+</head>
+<body class="childrenBody">
+<form class="layui-form" style="width:80%;">
+    <input type="hidden" id="id" name="id" class="id">
+    <div class="layui-form-item">
+        <label class="layui-form-label" >标的名称</label>
+        <div class="layui-input-inline">
+            <input type="text" id="title" name="title" class="layui-input" lay-verify="required"
+                   placeholder="标的名称" maxlength="20">
+            <span style='float:left;margin-top:9px'>现在名称：<i id="oldTitle"></i></span>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="update">确认修改</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript">
+    layui.config({
+        base: "../../js/"
+    }).use(['base', 'form', 'layer', 'jquery', 'laydate', 'laypage'], function () {
+        var base = layui.base,
+            form = layui.form,
+            layer = parent.layer === undefined ? layui.layer : parent.layer,
+            $ = layui.jquery,
+            laydate = layui.laydate;
+        document.getElementById("id").value = parent.dataId;
+        document.getElementById("oldTitle").innerText = parent.productTitle;
+
+        form.on('submit(update)', function (data) {
+        var index = top.layer.msg('数据提交中，请稍候', {icon: 16, time: false, shade: 0.8});
+        $.ajax({
+            type: 'POST',
+            url: "product/updateProductTitle",
+            data: JSON.stringify(data.field),
+            contentType: "application/json",
+            success: function (data) {
+                if (data.code === 200) {
+                    top.layer.close(index);
+
+                        layer.msg('修改成功', {icon: 1});
+                        layer.closeAll("iframe");
+                        //刷新父页面
+                        parent.location.reload();
+                } else {
+                    top.layer.close(index);
+                    layer.msg(data.message, {icon: 2});
+                }
+            }
+        });
+
+        //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        return false;
+    });
+    });
+</script>
+</body>
+</html>

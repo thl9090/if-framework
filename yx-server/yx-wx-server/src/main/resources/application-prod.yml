@@ -1,0 +1,43 @@
+spring:
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:
+    timeout: 0
+    pool:
+      max-active: 200
+      max-wait: 10000
+      max-idle: 150
+      min-idle: 50
+    lock:
+      waitTimeOut: 5
+      lockTimeOut: 10
+  session:
+    timeout: 60
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
+    pool:
+      enabled: false #如果此处设置为true，需要加如下的依赖包，否则会自动配置失败，报JmsMessagingTemplate注入失败
+      #<dependency>
+      #         <groupId>org.apache.activemq</groupId>
+      #            <artifactId>activemq-pool</artifactId>
+      #        <!-- <version>5.7.0</version> -->
+      #    </dependency>
+
+server:
+  port: 8078
+
+dubbo:
+  application:
+    name: yx-wx-dubbo-consumer
+    owner: yx-wx-dubbo-consumer
+  registry:
+    protocol: zookeeper
+    address: 127.0.0.1:2181
+
+logging:
+  level:
+     root: info

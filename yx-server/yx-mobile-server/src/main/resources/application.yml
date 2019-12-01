@@ -1,0 +1,11 @@
+spring:
+  profiles:
+    active: dev
+
+auto:
+  swagger2:
+    enable: true
+    apiInfo:
+      version: 1.0.0
+      title: yx管理平台
+      description: yx管理平台-APP接口文档

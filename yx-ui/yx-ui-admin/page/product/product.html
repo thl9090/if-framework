@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>标的添加--YX管理平台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="../../css/common.css" media="all" />
+    <style type="text/css">
+        /*.layui-form-item .layui-inline {*/
+        /*width: 33.333%;*/
+        /*float: left;*/
+        /*margin-right: 0;*/
+        /*}*/
+        /*@media (max-width: 1240px) {*/
+        /*.layui-form-item .layui-inline {*/
+        /*width: 100%;*/
+        /*float: none;*/
+        /*}*/
+        /*}*/
+
+        .layui-form-item .layui-form-label {
+            width: 15%;
+        }
+
+        .layui-form-item .layui-input-inline {
+            width: 25%;
+        }
+        /* 多张图片上传start*/
+
+        .upload-img {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            margin-left: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-img img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .upload-img .delete {
+            width: 100%;
+            height: 35px;
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+        }
+        /*.upload-img .back{width: 100%;height: 100%;background: #000000;opacity: 0.3;position: absolute;bottom: 0;left: 0;z-index: 10;}*/
+
+        .upload-img .delete-btn {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%, 0);
+            z-index: 11;
+            cursor: pointer;
+        }
+
+        .upload-img .advance-btn {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            z-index: 11;
+        }
+
+        .upload-img .recede-btn {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            z-index: 11;
+        }
+
+        .upload-img span {
+            margin: 0 !important;
+            padding: 0 7.5px;
+        }
+        /* 多张图片上传end*/
+    </style>
+</head>
+
+<body class="childrenBody">
+    <form class="layui-form" id="dataForm">
+        <input type="hidden" name="id" id="id" class="id">
+        <blockquote class="layui-elem-quote">借款属性</blockquote>
+        <!--<div class="layui-form-item">
+            <label class="layui-form-label">原始借款人</label>
+            <div class="layui-input-inline" style="width: 70%;">
+                <input type="hidden" id="oriBorrowerIds" name="oriBorrowerIds" lay-verify="required" class="oriBorrowerIds">
+                <input type="text" id="oriBorrowers" name="oriBorrowers" lay-verify="required" class="layui-input oriBorrowers">
+            </div>
+        </div>-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">借款人</label>
+            <div class="layui-input-inline">
+                <input type="hidden" id="borrowUserId" name="borrowUserId" lay-verify="required" class="layui-input borrowUserId">
+                <input type="text" id="borrowUserName" name="borrowUserName" lay-verify="required" class="layui-input borrowUserName">
+            </div>
+            <label class="layui-form-label ">还款方式</label>
+            <div class="layui-input-inline">
+                <select name="repurchaseMode" lay-verify="required" class="repurchaseMode" lay-filter='fit'>
+                    <option value="">请选择</option>
+                    <option value="1">按月等额本息</option>
+                    <option value="2">按月先息后本</option>
+                    <option value="3">按日计息，到期还本息</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label ">借款期限</label>
+            <div class="layui-input-inline">
+                <input type="text" name="productDeadline" lay-verify="required|number" class="layui-input productDeadline">
+            </div>
+            <span style='float:left;margin-top:9px' id='unit'></span>
+            <label class="layui-form-label ">借款推荐方</label>
+            <div class="layui-input-inline">
+                <input type="hidden" id="guaranteeId" name="guaranteeId" lay-verify="required" class="layui-input guaranteeId">
+                <input type="text" id="guaranteeName" name="guaranteeName" lay-verify="required" class="layui-input guaranteeName">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">招标天数</label>
+            <div class="layui-input-inline">
+                <input type="text" name="timeCount" lay-verify="required|number" class="layui-input timeCount">
+            </div>
+            <label class="layui-form-label">借款类型</label>
+            <div class="layui-input-inline">
+                <select name="assetType" lay-verify="required" class="assetType">
+                    <option value="">请选择</option>
+                    <option value="3">安享系列</option>
+                    <option value="4">私享系列</option>
+                    <option value="5">尊享系列</option>
+                    <option value="6">福享系列</option>
+                    <option value="8">新手福利</option>
+                    <!--<option value="10">净值标</option>-->
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">借款用途</label>
+            <div class="layui-input-inline">
+                <select name="useType" lay-verify="required" class="useType">
+                    <option value="">请选择</option>
+                    <!--<option value="1">个人消费</option>
+                <option value="2">短期周转</option>
+                <option value="3">企业资金周转</option>
+                <option value="5">赎楼</option>
+                <option value="6">企业过桥</option>-->
+                    <option value="7">购车</option>
+                    <option value="8">装修</option>
+                    <option value="9">教育培训</option>
+                    <option value="10">个人旅游</option>
+                    <option value="11">企业经营</option>
+                    <option value="12">日常消费</option>
+                    <option value="4">其它</option>
+                </select>
+            </div>
+            <label class="layui-form-label ">借款用途备注</label>
+            <div class="layui-input-inline">
+                <input type="text" name="useTypeRemark"  class="layui-input useTypeRemark">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label ">是否可以转让</label>
+            <div class="layui-input-inline">
+                <select name="isTransfer" lay-verify="required" class="isTransfer">
+                    <option value="">请选择</option>
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">放款方式</label>
+            <div class="layui-input-inline">
+                <select name="autoLoan" lay-verify="required" class="autoLoan">
+                    <option value="">请选择</option>
+                    <option value="0">手动放款</option>
+                    <!--<option value="1">自动放款</option>-->
+                </select>
+            </div>
+            <label class="layui-form-label">风险评级</label>
+            <div class="layui-input-inline">
+                <select name="productRating" lay-verify="required" class="productRating">
+                    <option value="">请选择</option>
+                    <option value="1">A(100分以上)</option>
+                    <option value="2">B(90-99分)</option>
+                    <option value="3">C(80-89分)</option>
+                    <option value="4">D(70-79分)</option>
+                    <option value="5">E(70分以下)</option>
+                </select>
+            </div>
+        </div>
+       <!-- <div class="layui-form-item">
+            <label class="layui-form-label">是否加入智投</label>
+            <div class="layui-input-inline">
+                <select name="isJoinSmart" lay-filter="isJoinSmart" class="isJoinSmart">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </div>
+            <label class="layui-form-label joinSmartDiv" style="display: none">智投项目</label>
+            <div class="layui-input-inline joinSmartDiv" style="display: none">
+                <input type="hidden" id="smartBidPlanId" name="smartBidPlanId"  class="layui-input smartBidPlanId">
+                <input type="text" id="smartName" name="smartName"  class="layui-input smartName" >
+            </div>
+        </div>-->
+        <div class="layui-form-item">
+            <!--<label class="layui-form-label">招标天数</label>
+        <div class="layui-input-inline">
+            <input type="text" name="timeCount" lay-verify="required|number" class="layui-input timeCount">
+        </div>-->
+        </div>
+
+        <blockquote class="layui-elem-quote">金额数据</blockquote>
+        <div class="layui-form-item">
+            <label class="layui-form-label">借款金额</label>
+            <div class="layui-input-inline">
+                <input type="text" name="productAmount" lay-verify="required|number" class="layui-input productAmount">
+            </div>
+            <span style='float:left;margin-top:9px'>元</span>
+            <label class="layui-form-label">年收益</label>
+            <div class="layui-input-inline">
+                <input type="text" name="profit" lay-verify="required|number" class="layui-input profit">
+            </div>
+            <span style='float:left;margin-top:9px'>%</span>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label ">是否加息</label>
+            <div class="layui-input-inline" style="width: 8%;">
+                <select id="isAddProfit" name="isAddProfit" class="isAddProfit" lay-filter="isAddProfit">
+                    <option value="2">否</option>
+                    <option value="1">是</option>
+                </select>
+            </div>
+            <div id="addProfitDiv" style="display: none;">
+                <div class="layui-input-inline" style="width: 8%;">
+                    <select name="addProfitType" lay-verify="required" class="addProfitType">
+                        <option value="1">借款人</option>
+                        <!--<option value="2">平台</option>-->
+                    </select>
+                </div>
+                <div class="layui-input-inline" style="width: 12%;">
+                    <input type="number" id="addProfit" name="addProfit" class="layui-input addProfit" placeholder="加息利率（单位：%）">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">借款人服务费率</label>
+            <div class="layui-input-inline">
+                <input type="text" name="serviceFee" lay-verify="required|number" class="layui-input serviceFee">
+            </div>
+            <span style='float:left;margin-top:9px'>%</span>
+            <label class="layui-form-label">投资人服务费率</label>
+            <div class="layui-input-inline">
+                <input type="text" name="bidServerFee" lay-verify="required|number" class="layui-input bidServerFee">
+            </div>
+            <span style='float:left;margin-top:9px'>%</span>
+            <!--<label class="layui-form-label " >截标金额</label>
+        <div class="layui-input-inline" >
+            <input type="text" name="stopBidAmount" lay-verify="required|number" class="layui-input stopBidAmount">
+        </div>-->
+        </div>
+
+        <blockquote class="layui-elem-quote">投标限制</blockquote>
+        <div class="layui-form-item">
+            <label class="layui-form-label ">最小投标金额</label>
+            <div class="layui-input-inline">
+                <input type="text" name="minBidAmount" lay-verify="required|number" class="layui-input minBidAmount">
+            </div>
+            <span style='float:left;margin-top:9px'>元</span>
+            <label class="layui-form-label">最大投标金额</label>
+            <div class="layui-input-inline">
+                <input type="text" name="maxBidAmount" lay-verify="required|number" class="layui-input maxBidAmount">
+            </div>
+            <span style='float:left;margin-top:9px'>元</span>
+        </div>
+
+        <div class="layui-form-item">
+            <!--<label class="layui-form-label " >截标日期</label>
+        <div class="layui-input-inline" >
+            <input type="text" id="stopBidTime" name="stopBidTime" lay-verify="required" class="layui-input stopBidTime">
+        </div>-->
+        </div>
+
+        <blockquote class="layui-elem-quote">标的描述</blockquote>
+        <div class="layui-form-item">
+            <label class="layui-form-label">借款描述</label>
+            <div class="layui-input-inline" style="width: 80%;">
+                <textarea name="borrowDesc" placeholder="请输入内容" lay-verify="required" class="layui-textarea borrowDesc"></textarea>
+            </div>
+        </div>
+
+        <blockquote class="layui-elem-quote">风控描述</blockquote>
+        <div class="layui-form-item">
+            <label class="layui-form-label">反担保</label>
+            <div class="layui-input-inline" style="width: 80%;">
+                <textarea name="guaranteeDesc" placeholder="请输入内容" class="layui-textarea guaranteeDesc"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">风控描述</label>
+            <div class="layui-input-inline" style="width: 80%;">
+                <textarea name="riskDesc" placeholder="请输入内容" lay-verify="required" class="layui-textarea riskDesc"></textarea>
+            </div>
+        </div>
+
+        <blockquote class="layui-elem-quote">借款材料</blockquote>
+        <div class="layui-form-item" id="urls">
+            <label class="layui-form-label">借款材料上传</label>
+            <div class="layui-input-inline" style="width: 80%;">
+                <button type="button" class="layui-btn" id="fileUpload">多图片上传</button>
+                <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                    预览图：
+                    <div class="layui-upload-list" id="images">
+
+                    </div>
+                </blockquote>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <permission value="sys:product:update">
+                    <button class="layui-btn" lay-submit lay-filter="addBtn">立即提交</button>
+                </permission>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript" src="../../layui/layui.js"></script>
+    <script type="text/javascript" src="product.js"></script>
+</body>
+
+</html>

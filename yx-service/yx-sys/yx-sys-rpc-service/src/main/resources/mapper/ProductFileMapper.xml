@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.dao.mapper.ProductFileMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.sys.model.product.ProductFile">
+        <result column="id" property="id" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="product_id" property="productId" />
+        <result column="url" property="url" />
+    </resultMap>
+
+
+    <select id="selectByProductId" resultMap="BaseResultMap">
+          SELECT
+              pf.*
+          FROM  product_file pf
+          WHERE
+              pf.product_id=#{productId}
+          ORDER BY
+              pf.id
+    </select>
+
+    <delete id="deleteByProductId">
+        DELETE
+        FROM product_file
+        WHERE
+              product_id=#{productId}
+
+    </delete>
+
+</mapper>

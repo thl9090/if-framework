@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>yx-job</artifactId>
+        <groupId>com.yx</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>yx-job-model</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.yx</groupId>
+            <artifactId>yx-job-common</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>io.github.jianzhichun</groupId>
+            <artifactId>swagger2-spring-boot-starter</artifactId>
+            <version>${swagger2.spring.boot.starter.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

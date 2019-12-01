@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.dao.mapper.AppPackageDescMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.sys.model.appVersion.AppPackageDesc">
+        <result column="id" property="id"/>
+        <result column="package_version_id" property="packageVersionId"/>
+        <result column="package_desc" property="packageDesc"/>
+        <result column="desc_index" property="desc_index"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="table_name">
+        app_package_desc
+    </sql>
+
+    <sql id="columns">
+        id,
+        package_version_id,
+        package_desc,
+        desc_index,
+        create_by,
+        create_time,
+        update_by,
+        update_time
+    </sql>
+
+    <sql id="select_condition">
+        <if test="id != null">and id = #{id}</if>
+        <if test="packageVersionId != null">and package_version_id = #{packageVersionId}</if>
+        <if test="packageDesc != null and packageDesc != ''">and package_desc = #{packageDesc}</if>
+        <if test="descIndex != null">and desc_index = #{descIndex}</if>
+    </sql>
+
+    <insert id="insertSelective" parameterType="com.yx.sys.model.appVersion.AppPackageDesc" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO
+        <include refid="table_name"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="packageVersionId != null">package_version_id,</if>
+            <if test="packageDesc != null and packageDesc != ''">package_desc,</if>
+            <if test="descIndex != null">desc_index,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="packageVersionId != null">#{packageVersionId},</if>
+            <if test="packageDesc != null and packageDesc != ''">#{packageDesc},</if>
+            <if test="descIndex != null">#{descIndex},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <insert id="batchInsert" parameterType="list">
+        INSERT INTO
+        <include refid="table_name"/>
+        (
+        package_version_id,
+        package_desc,
+        desc_index
+        )
+        VALUES
+        <foreach collection="list" separator="," item="item">
+            (
+            #{item.packageVersionId},
+            #{item.packageDesc},
+            #{item.descIndex}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteByVersionId">
+        delete from <include refid="table_name"/>
+        where package_version_id = #{versionId}
+    </delete>
+
+    <select id="getDescsByVersionIdForApp" resultType="java.lang.String">
+        select
+          concat(desc_index, '.', package_desc)
+        from <include refid="table_name"/>
+        where package_version_id = #{versionId}
+        order by desc_index
+    </select>
+
+    <select id="getDescsByVersionId" resultType="java.lang.String">
+        select
+          package_desc
+        from <include refid="table_name"/>
+        where package_version_id = #{versionId}
+        order by desc_index
+    </select>
+
+</mapper>

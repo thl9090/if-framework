@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>查看用户账户</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+</head>
+<body class="childrenBody">
+<form class="layui-form" style="width:80%;">
+    <input type="hidden" id="id" name="id" class="id">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="min-width: 120px;">账户余额</label>
+        <div class="layui-input-inline">
+            <input type="text" id="acctBal" name="acctBal" class="layui-input"
+                   placeholder="账户余额" >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="min-width: 120px;">可用余额</label>
+        <div class="layui-input-inline">
+            <input type="text" id="availableBal" name="availableBal" class="layui-input"
+                   placeholder="可用余额" >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="min-width: 120px;">冻结金额</label>
+        <div class="layui-input-inline">
+            <input type="text" id="frozblBal" name="frozblBal" class="layui-input"
+                   placeholder="冻结余额" >
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript">
+    layui.config({
+        base: "../../js/"
+    }).use(['base', 'form', 'layer', 'jquery', 'laydate', 'laypage'], function () {
+        var base = layui.base,
+            form = layui.form,
+            layer = parent.layer === undefined ? layui.layer : parent.layer,
+            $ = layui.jquery,
+            laydate = layui.laydate;
+        document.getElementById("id").value = parent.dataId;
+        var data = "{'id':"+parent.dataId+"}";
+        $.ajax({
+            type: 'POST',
+            url: "userInfo/queryBalance",
+            data: data,
+            contentType: "application/json",
+            success: function (data) {
+                if (data.code === 200) {
+                    document.getElementById("acctBal").value = data.data.acctBal;
+                    document.getElementById("availableBal").value = data.data.availableBal;
+                    document.getElementById("frozblBal").value = data.data.frozblBal;
+                } else {
+                    layer.msg(data.message, {icon: 2});
+                }
+            }
+        });
+
+
+    });
+</script>
+</body>
+</html>

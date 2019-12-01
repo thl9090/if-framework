@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.sys.dao.mapper.SysParamMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yx.sys.model.SysParam">
+        <result column="id" property="id"/>
+        <result column="param_key" property="paramKey"/>
+        <result column="param_value" property="paramValue"/>
+        <result column="catalog_id" property="catalogId"/>
+        <result column="enable_" property="enable"/>
+        <result column="is_del" property="isDel"/>
+        <result column="remark_" property="remark"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="getByKey" resultMap="BaseResultMap">
+        select *
+        from sys_param
+        where param_key = #{key}
+    </select>
+
+    <select id="selectCompany" resultType="com.yx.sys.model.company.Company">
+        SELECT
+            1 as id,
+            s1.param_value AS companyName,
+            s2.param_value AS address,
+            s3.param_value AS msg,
+            s4.param_value AS servicePhone,
+            s5.param_value AS serviceTime,
+            s6.param_value AS telPhone,
+            s7.param_value AS recordation,
+            s8.param_value AS prompt,
+            s9.param_value AS platform,
+            s10.param_value AS url,
+            s11.param_value AS email
+        FROM
+            sys_param s1,
+            sys_param s2,
+            sys_param s3,
+            sys_param s4,
+            sys_param s5,
+            sys_param s6,
+            sys_param s7,
+            sys_param s8,
+            sys_param s9,
+            sys_param s10,
+            sys_param s11
+        WHERE
+            s1.param_key = 'COMPANY_NAME'
+        AND s2.param_key = 'COMPANY_ADDRESS'
+        AND s3.param_key = 'COMPANY_STAMP_URL'
+        AND s4.param_key = 'COMPANY_SERVICE_PHONE'
+        AND s5.param_key = 'COMPANY_SERVICE_TIME'
+        AND s6.param_key = 'COMPANY_TEL_PHONE'
+        AND s7.param_key = 'COMPANY_RECORDATION'
+        AND s8.param_key = 'COMPANY_PROMPT'
+        AND s9.param_key = 'COMPANY_PLATFORM'
+        AND s10.param_key = 'COMPANY_URL'
+        AND s11.param_key = 'COMPANY_EMAIL';
+    </select>
+
+    <select id="getStringByKey" resultType="java.lang.String">
+        select param_value
+        from sys_param
+        where param_key = #{key}
+    </select>
+
+    <update id="updateCompany">
+        UPDATE sys_param set
+        param_value = #{paramKey}
+        where param_key = #{paramValue}
+    </update>
+
+    <update id="updateParam">
+        update sys_param
+        set param_value = #{param}
+        where param_key = #{key}
+    </update>
+
+
+    <select id="getCompanyInfo" resultType="com.yx.sys.model.company.CompanyModel">
+        select
+          sp1.param_value as servicePhone,
+          sp2.param_value as workingDaysServiceTime,
+          sp3.param_value as weekendServiceTime
+        from sys_param sp1,
+          sys_param sp2,
+          sys_param sp3
+        where
+          sp1.param_key = 'COMPANY_SERVICE_PHONE'
+          and sp2.param_key = 'COMPANY_WORKING_DAYS_SERVICE_TIME'
+          and sp3.param_key = 'COMPANY_WEEKEND_SERVICE_TIME'
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>新增版本</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../../css/common.css" media="all"/>
+</head>
+<body class="childrenBody">
+<form class="layui-form" style="width:90%;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">App类型</label>
+        <div class="layui-input-block">
+            <select id="appType" name="appType">
+                <option value="1">安卓</option>
+                <option value="2">IOS</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">版本号</label>
+        <div class="layui-input-block">
+            <input type="text" id="packageVersion" name="packageVersion" class="layui-input"
+                   placeholder="请输入版本号（如：2.3.4）">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">App包地址</label>
+        <div class="layui-input-block">
+            <input type="text" id="packageUrl" name="packageUrl" class="layui-input" placeholder="点击上传App包信息">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">升级方式</label>
+        <div class="layui-input-block">
+            <select id="upgradeMode" name="upgradeMode">
+                <option value="1">强制</option>
+                <option value="2">提示</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">版本描述</label>
+        <div class="layui-input-block">
+            <a style="cursor: pointer;margin: 10px 0px 10px 0px;" id="addDesc"
+               class="layui-btn layui-btn-danger layui-btn-xs">
+                <i class="layui-icon layui-icon-add-1">新增描述</i>
+            </a>
+            <div id="descDiv">
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="add">确认新增</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript">
+    layui.config({
+        base: "../../js/"
+    }).use(['base', 'form', 'layer', 'jquery', 'laydate', 'tree', 'upload', 'layedit'], function () {
+        var base = layui.base,
+            form = layui.form,
+            laydate = layui.laydate,
+            upload = layui.upload,
+            layedit = layui.layedit,
+            layer = parent.layer === undefined ? layui.layer : parent.layer,
+            $ = layui.jquery;
+
+        uploadIndex = null;
+        descArr = new Array();
+
+        clickAddDesc();
+
+        upload.render({
+            elem: '#packageUrl',
+            url: 'appVersion/uploadApk',
+            data: {
+                apkName: function () {
+                    var packageVersion = $('#packageVersion').val();
+                    if ($.isEmptyObject(packageVersion)) {
+                        return '';
+                    }
+                    return 'yxsrch-' + packageVersion + '.apk';
+                }
+            },
+            accept: 'file',
+            exts: 'apk',
+            size: '30720', // 30M
+            choose: function () {
+                uploadIndex = top.layer.msg('数据提交中，请稍候', {icon: 16, time: false, shade: 0.8});
+            },
+            done: function (res) {
+                top.layer.close(uploadIndex);
+                top.layer.msg("上传成功", {icon: 1});
+                $('#packageUrl').val(res.data);
+            },
+            error: function () {
+                top.layer.close(uploadIndex);
+                layer.msg('上传失败', {icon: 2});
+            }
+        });
+
+        form.on('submit(add)', function (data) {
+            var versionInfo = {};
+            var appType = $('#appType').val();
+            var packageVersion = $('#packageVersion').val();
+            if ($.isEmptyObject(packageVersion)) {
+                layer.msg('版本号不能为空', {icon: 2});
+                $('#packageVersion').focus();
+                return false;
+            }
+            var packageUrl = $('#packageUrl').val();
+            if ($.isEmptyObject(packageUrl)) {
+                if (appType == 1) {
+                    layer.msg('App包地址不能为空', {icon: 2});
+                    $('#packageUrl').focus();
+                    return false;
+                }
+            }
+            var upgradeMode = $('#upgradeMode').val();
+
+            if (descArr.length <= 0) {
+                layer.msg('描述不能为空', {icon: 2});
+                return false;
+            }
+
+            var descList = new Array();
+            var item = null, itemVal = null;
+            for (var i = 0, len = descArr.length; i < len; i++) {
+                item = descArr[i];
+                itemVal = $('#descInfo' + item).val();
+                if ($.isEmptyObject(itemVal)) {
+                    layer.msg('第' + item + '条描述内容不能为空', {icon: 2});
+                    $('#descInfo' + item).focus();
+                    return false;
+                }
+                descList.push(itemVal);
+            }
+
+            versionInfo.appType = appType;
+            versionInfo.packageVersion = packageVersion;
+            versionInfo.packageUrl = packageUrl;
+            versionInfo.upgradeMode = upgradeMode;
+            versionInfo.descList = descList;
+
+            var index = top.layer.msg('数据提交中，请稍候', {icon: 16, time: false, shade: 0.8});
+            $.ajax({
+                type: 'post',
+                url: 'appVersion/addVersion',
+                data: JSON.stringify(versionInfo),
+                success: function (data) {
+                    console.log(data);
+                    top.layer.close(index);
+                    if (data.code != 200) {
+                        layer.msg(data.message, {icon: 2});
+                        return false;
+                    }
+                    //弹出loading
+                    setTimeout(function () {
+                        top.layer.msg("操作成功！", {icon: 1});
+                        layer.closeAll("iframe");
+                        parent.location.reload();
+                    }, 500);
+                },
+            });
+            return false;
+        });
+
+        $('#addDesc').on('click', function () {
+            clickAddDesc();
+        });
+
+        function clickAddDesc() {
+            if (descArr.length >= 10) {
+                layer.msg('版本描述最多10条', {icon: 2});
+                return;
+            }
+            var index = descArr.length + 1;
+            appendDescDiv(index);
+            descArr.push(index);
+        }
+
+        function appendDescDiv(index) {
+            var descDiv = new StringBuffer();
+            descDiv.append('<div id="descDiv' + index + '" class="layui-form-item" style="margin-left: -30px;">');
+            descDiv.append('<label class="layui-form-label" style="cursor: pointer;">');
+            if (index != 1) {
+                descDiv.append('<a data-index="' + index + '" style="margin-left: -40px;" class="layui-btn layui-btn-warm layui-btn-xs" lay-submit lay-filter="removeItem">');
+                descDiv.append('<i class="layui-icon layui-icon-close removeItem"></i>');
+                descDiv.append('</a>');
+            }
+            descDiv.append('<span style="margin-left: 20px;">');
+            descDiv.append(index + '.');
+            descDiv.append('</span>');
+            descDiv.append('</label>');
+            descDiv.append('<div class="layui-input-block">');
+            descDiv.append('<textarea id="descInfo' + index + '" class="layui-textarea" placeholder="填写版本描述（最多1000个字）" rows="5" maxlength="1000">');
+            descDiv.append('</textarea>');
+            descDiv.append('</div>');
+            descDiv.append('</div>');
+            $('#descDiv').append(descDiv.toString());
+            form.render();
+        }
+
+        form.on('submit(removeItem)', function (obj) {
+            var removeIdx = $(obj.elem).attr('data-index');
+            var newDescArr = new Array();
+            var item = null, itemVal = null, tmpIndex = null;
+            for (var i = 0, len = descArr.length; i < len; i++) {
+                item = descArr[i];
+                itemVal = $('#descInfo' + item).val();
+                $('#descDiv' + item).remove();
+                if (item == removeIdx) {
+                    continue;
+                }
+                tmpIndex = newDescArr.length + 1;
+                appendDescDiv(tmpIndex);
+                $('#descInfo' + tmpIndex).val(itemVal);
+                newDescArr.push(tmpIndex);
+            }
+            descArr = newDescArr;
+        })
+
+    });
+
+</script>
+</body>
+</html>
