@@ -136,21 +136,21 @@ yx-framework ............................................ yx信息架构
      说明：演示环境会慢慢完善、sql文件将在最近几天提交，请大家多多关注，帮忙点下star
      QQ群：977482984
      ##扫码入群   
-   ![qq群](doc/images/qq.png)   
+   ![qq群](https://github.com/thl9090/yx-framework1/blob/master/doc/images/qq.png)   
         
          
      ## 预览图
      
-   ![预览图](doc/images/login.png)
-   ![预览图](doc/images/index.png)
-   ![预览图](doc/images/menu.png)
-   ![预览图](doc/images/user.png)
-   ![预览图](doc/images/role.png)
-   ![预览图](doc/images/job.png)
-   ![预览图](doc/images/druid.png)
-   ![预览图](doc/images/swagger.png)
-   ![预览图](doc/images/dubboAdmin1.png)
-   ![预览图](doc/images/dubboAdmin2.png)
+   ![预览图](https://github.com/thl9090/yx-framework1/blob/master/doc/images/login.png)
+   ![预览图](https://github.com/thl9090/yx-framework1/blob/master/doc/images/index.png)
+   ![预览图](https://github.com/thl9090/yx-framework1/blob/master/doc/images/menu.png)
+   ![预览图](https://github.com/thl9090/yx-framework1/blob/master/doc/images/user.png)
+   ![预览图](https://github.com/thl9090/yx-framework1/blob/master/doc/images/role.png)
+   ![预览图](https://github.com/thl9090/yx-framework1/blob/master/doc/images/job.png)
+   ![预览图](https://github.com/thl9090/yx-framework1/blob/master/doc/images/druid.png)
+   ![预览图](https://github.com/thl9090/yx-framework1/blob/master/doc/images/swagger.png)
+   ![预览图](https://github.com/thl9090/yx-framework1/blob/master/doc/images/dubboAdmin1.png)
+   ![预览图](https://github.com/thl9090/yx-framework1/blob/master/doc/images/dubboAdmin2.png)
      
          
      ## 版权声明
