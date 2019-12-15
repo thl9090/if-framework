@@ -57,6 +57,13 @@ yx-framework ............................................ yx信息架构
          1、安装mysql,zookeeper,redis,nginx并启动相关服务
          2、先启动服务的提供方，运行每个模块下rpc-service中的serviceApplication的main方法，即可启动相关服务
          3、启动服务调用方，运行每个-server工程下的serverApplication的main方法，即可启动相关服务
+       
+       
+     ## 核心技术图
+  ![预览图](https://raw.githubusercontent.com/thl9090/yx-framework1/master/doc/images/jiagou-hx.png)
+     
+     ## 基础架构图
+  ![预览图](https://raw.githubusercontent.com/thl9090/yx-framework1/master/doc/images/jiagou-jc.png)        
          
          
      ## 项目简介
