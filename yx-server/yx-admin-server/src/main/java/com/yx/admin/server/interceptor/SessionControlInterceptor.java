@@ -29,64 +29,66 @@ public class SessionControlInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        try{
+            Subject subject = SecurityUtils.getSubject();
+            //如果没有登录,直接返回true
+            if (!subject.isAuthenticated()) {
+                return true;
+            }
 
-        Subject subject = SecurityUtils.getSubject();
-        //如果没有登录,直接返回true
-        if (!subject.isAuthenticated()) {
-            return true;
-        }
+            String sessionId = (String)subject.getSession().getId();
 
-        String sessionId = (String)subject.getSession().getId();
+            Object o = CacheUtil.getCache().get(Constants.CacheNamespaceEnum.SESSION_USER_ID.value() + sessionId);
+            String userId=null;
+            if(o!=null){
+                userId=String.valueOf(o);
+            }
 
-        Object o = CacheUtil.getCache().get(Constants.CacheNamespaceEnum.SESSION_USER_ID.value() + sessionId);
-        String userId=null;
-        if(o!=null){
-            userId=String.valueOf(o);
-        }
+            if(o==null||StringUtils.isBlank(userId)){
+                CacheUtil.getCache().del(Constants.CacheNamespaceEnum.SESSION_USER_ID.value() + sessionId);
 
-        if(o==null||StringUtils.isBlank(userId)){
-            CacheUtil.getCache().del(Constants.CacheNamespaceEnum.SESSION_USER_ID.value() + sessionId);
+                subject.logout();
+                throw new BusinessException(Constants.ResultCodeEnum.UNLOGIN.value(), Constants.ResultCodeEnum.UNLOGIN.getMessage());
+            }
 
-            subject.logout();
-            throw new BusinessException(Constants.ResultCodeEnum.UNLOGIN.value(), Constants.ResultCodeEnum.UNLOGIN.getMessage());
-        }
+            if(AuthorizationConstant.KICKOUT.equals(userId)){
+                CacheUtil.getCache().del(Constants.CacheNamespaceEnum.SESSION_USER_ID.value() + sessionId);
 
-        if(AuthorizationConstant.KICKOUT.equals(userId)){
-            CacheUtil.getCache().del(Constants.CacheNamespaceEnum.SESSION_USER_ID.value() + sessionId);
+                subject.logout();
+                throw new BusinessException(Constants.ResultCodeEnum.KICK_OUT.value(), "您的账号在其它地方登陆,请重新登陆！");
+            }
 
-            subject.logout();
-            throw new BusinessException(Constants.ResultCodeEnum.KICK_OUT.value(), "您的账号在其它地方登陆,请重新登陆！");
-        }
+            //执行到这一步说明当前用户没有被踢出，更新用户信息
+            Object obj = CacheUtil.getCache().get(Constants.CacheNamespaceEnum.SESSION_USER.value() + sessionId);
+            SysUserVO sysUserModel=null;
+            if(obj!=null){
+                sysUserModel=(SysUserVO)obj;
+            }
+            if(obj==null||sysUserModel==null){
+                //没有获取到session对应的用户信息，所以强制退出登陆
 
-        //执行到这一步说明当前用户没有被踢出，更新用户信息
-        Object obj = CacheUtil.getCache().get(Constants.CacheNamespaceEnum.SESSION_USER.value() + sessionId);
-        SysUserVO sysUserModel=null;
-        if(obj!=null){
-            sysUserModel=(SysUserVO)obj;
-        }
-        if(obj==null||sysUserModel==null){
-            //没有获取到session对应的用户信息，所以强制退出登陆
+                CacheUtil.getCache().del(Constants.CacheNamespaceEnum.SESSION_USER_ID.value() + sessionId);
+                CacheUtil.getCache().del(Constants.CacheNamespaceEnum.SESSION_USER.value()+sessionId);
 
-            CacheUtil.getCache().del(Constants.CacheNamespaceEnum.SESSION_USER_ID.value() + sessionId);
-            CacheUtil.getCache().del(Constants.CacheNamespaceEnum.SESSION_USER.value()+sessionId);
+                subject.logout();
+                throw new BusinessException(Constants.ResultCodeEnum.UNLOGIN.value(), Constants.ResultCodeEnum.UNLOGIN.getMessage());
+            }
+            String ip=getClientIp(request);
+            if(StringUtils.isBlank(ip)){
+                ip=HttpUtil.getClientIP(request);
+            }
 
-            subject.logout();
-            throw new BusinessException(Constants.ResultCodeEnum.UNLOGIN.value(), Constants.ResultCodeEnum.UNLOGIN.getMessage());
-        }
-        String ip=getClientIp(request);
-        if(StringUtils.isBlank(ip)){
-            ip=HttpUtil.getClientIP(request);
-        }
+            sysUserModel.setIp(ip);
+            sysUserModel.setUpdateTime(new Date());
 
-        sysUserModel.setIp(ip);
-        sysUserModel.setUpdateTime(new Date());
+            // 1、sessionId和用户id关联
+            CacheUtil.getCache().set(Constants.CacheNamespaceEnum.SESSION_USER_ID.value()+sessionId,sysUserModel.getId(), AuthorizationConstant.ADMIN_AUTH_EXPIRE_TIME.intValue());
+            //2、将sesionId和用户信息关联
+            CacheUtil.getCache().set(Constants.CacheNamespaceEnum.SESSION_USER.value()+sessionId,sysUserModel, AuthorizationConstant.ADMIN_AUTH_EXPIRE_TIME.intValue());
+            //3、将用户id和sessionId关联
+            CacheUtil.getCache().set(Constants.CacheNamespaceEnum.USER_ID_SESSION.value()+sysUserModel.getId(),sessionId, AuthorizationConstant.ADMIN_AUTH_EXPIRE_TIME.intValue());
 
-        // 1、sessionId和用户id关联
-        CacheUtil.getCache().set(Constants.CacheNamespaceEnum.SESSION_USER_ID.value()+sessionId,sysUserModel.getId(), AuthorizationConstant.ADMIN_AUTH_EXPIRE_TIME.intValue());
-        //2、将sesionId和用户信息关联
-        CacheUtil.getCache().set(Constants.CacheNamespaceEnum.SESSION_USER.value()+sessionId,sysUserModel, AuthorizationConstant.ADMIN_AUTH_EXPIRE_TIME.intValue());
-        //3、将用户id和sessionId关联
-        CacheUtil.getCache().set(Constants.CacheNamespaceEnum.USER_ID_SESSION.value()+sysUserModel.getId(),sessionId, AuthorizationConstant.ADMIN_AUTH_EXPIRE_TIME.intValue());
+        }catch (Exception e){}
 
         return true;
     }
