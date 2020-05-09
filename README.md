@@ -132,8 +132,8 @@ yx-framework ............................................ yx信息架构
      10. 文件上传、邮件推送，邮件发送，短信发送等工具类可能不可用，需要将自己申请的accessKeyId，accessKeySecret配置到参数表中（sys_param）方可正常使用
    
      ## 项目地址
-             ● gitee： https://gitee.com/thl9090/yx-framework1
-             ● github：https://github.com/thl9090/yx-framework1
+             ● gitee： https://gitee.com/thl9090/if-framework
+             ● github：https://github.com/thl9090/if-framework
      
      ## 项目演示
         ● 演示地址： http://134.175.157.186/
